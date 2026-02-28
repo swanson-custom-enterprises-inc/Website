@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="msvalidate.01" content="52B9F7BE856E619B8CF07726EA7A727A" />
+  <title>Swanson Custom Enterprises</title>
+
+  <style>
+    /* -------------------------
+       Global styles
+    ------------------------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #1c1c1c;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    main {
+      scroll-snap-type: y mandatory;
+    }
+
+    /* -------------------------
+       Card sections
+    ------------------------- */
+    .card {
+      height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      scroll-snap-align: start;
+      background-size: cover;
+      background-position: center;
+      transition: transform 1s ease, filter 1s ease;
+      cursor: pointer;
+
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      filter: brightness(1.1);
+    }
+
+    /* Disable hover scaling for video hero */
+    .video-card:hover {
+      transform: none;
+      filter: none;
+    }
+
+    /* Overlay */
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.55),
+        rgba(0, 0, 0, 0.75)
+      );
+      z-index: 1;
+    }
+
+    /* Hover hint */
+    .card::after {
+      content: "Open in new tab ↗";
+      position: absolute;
+      bottom: 40px;
+      right: 40px;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 3;
+    }
+
+    .card:hover::after {
+      opacity: 1;
+    }
+
+    /* -------------------------
+       Content animation
+    ------------------------- */
+    .content {
+      position: relative;
+      text-align: center;
+      max-width: 900px;
+      padding: 2rem;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+      z-index: 3;
+    }
+
+    .card.visible .content {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      letter-spacing: -0.03em;
+    }
+
+    p {
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      opacity: 0.85;
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
+
+    .hint {
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+      opacity: 0.75;
+    }
+
+    /* -------------------------
+       Video background (Canva)
+    ------------------------- */
+    .video-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .video-bg iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      pointer-events: none; /* prevents iframe from blocking clicks */
+      transform: scale(1.15);
+    }
+
+    /* -------------------------
+       Background images
+    ------------------------- */
+    .web {
+      background-image: url("https://www.stockvault.net/data/2020/11/08/280614/preview16.jpg");
+    }
+
+    .media {
+      background-image: url("https://www.stockvault.net/data/2011/08/28/126444/preview16.jpg");
+    }
+
+    /* -------------------------
+       Spacers
+    ------------------------- */
+    .spacer {
+      height: 1vh;
+      background: #1c1c1c;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main>
+
+    <!-- HERO VIDEO CARD -->
+    <a class="card video-card"
+       href="https://sites.google.com/view/swanson-custom-enterprises/site-details"
+       target="_blank"
+       rel="noopener noreferrer">
+
+ <video autoplay muted loop playsinline
+  style="
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    z-index:0;
+  ">
+  <source src="https://swanson-custom-enterprises-inc.github.io/swanson-video-host/Intro%20to%20Swanson%20Custom%20Enterprises(2).mp4" type="video/mp4">
+</video>
+
+      <div class="content">
+        <h1>Swanson Custom Enterprises International</h1>
+        <p>Web Development • Audio Visual • Multimedia Production</p>
+        <div class="hint">
+          Scroll down for more information<br>
+          Click anywhere to open pages
+        </div>
+      </div>
+
+    </a>
+
+    <!-- Optional widget -->
+    <script src="https://static.elfsight.com/platform/platform.js" async></script>
+    <div class="elfsight-app-cf4345d8-cdda-49b3-8aae-174cf857defb" data-elfsight-app-lazy></div>
+
+    <div class="spacer"></div>
+
+    <!-- WEB DEVELOPMENT -->
+    <a class="card web"
+       href="https://sites.google.com/view/swanson-custom-enterprises/website-development"
+       target="_blank"
+       rel="noopener noreferrer">
+      <div class="content">
+        <h1>Web Development</h1>
+        <p>Websites tailored to fit your needs</p>
+      </div>
+    </a>
+
+    <div class="spacer"></div>
+
+    <!-- MULTIMEDIA -->
+    <a class="card media"
+       href="https://sites.google.com/view/swanson-custom-enterprises/multimedia-broadcasting"
+       target="_blank"
+       rel="noopener noreferrer">
+      <div class="content">
+        <h1>Multimedia Recording</h1>
+        <p>Video production, livestreaming, and studio-quality capture solutions</p>
+      </div>
+    </a>
+
+  </main>
+
+  <script>
+    /* -------------------------
+       Scroll reveal animation
+    ------------------------- */
+    const cards = document.querySelectorAll(".card");
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+
+    cards.forEach(card => observer.observe(card));
+  </script>
+
+</body>
+</html>
