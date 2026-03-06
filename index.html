@@ -1,266 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
+
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-D686SRD49Y"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-D686SRD49Y');
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-D686SRD49Y');
 </script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="msvalidate.01" content="52B9F7BE856E619B8CF07726EA7A727A" />
-  <title>Swanson Custom Enterprises</title>
 
-  <style>
-    /* -------------------------
-       Global styles
-    ------------------------- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+<title>Swanson Custom Enterprises</title>
 
-    html {
-      scroll-behavior: smooth;
-    }
+<style>
 
-    body {
-      background: #1c1c1c;
-      color: white;
-      overflow-x: hidden;
-    }
+/* -------------------------
+GLOBAL
+------------------------- */
 
-    main {
-      scroll-snap-type: y mandatory;
-    }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
 
-    /* -------------------------
-       Card sections
-    ------------------------- */
-    .card {
-      height: 100vh;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      scroll-snap-align: start;
-      background-size: cover;
-      background-position: center;
-      transition: transform 1s ease, filter 1s ease;
-      cursor: pointer;
+html{
+scroll-behavior:smooth;
+}
 
-      text-decoration: none;
-      color: inherit;
-    }
+body{
+background:#1c1c1c;
+color:white;
+overflow-x:hidden;
+}
 
-    .card:hover {
-      transform: scale(1.02);
-      filter: brightness(1.1);
-    }
+main{
+scroll-snap-type:y mandatory;
+}
 
-    /* Disable hover scaling for video hero */
-    .video-card:hover {
-      transform: none;
-      filter: none;
-    }
+/* -------------------------
+CARDS
+------------------------- */
 
-    /* Overlay */
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.55),
-        rgba(0, 0, 0, 0.75)
-      );
-      z-index: 1;
-    }
+.card{
+height:100vh;
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+scroll-snap-align:start;
+background-size:cover;
+background-position:center;
+transition:transform 1s ease,filter 1s ease;
+cursor:pointer;
+text-decoration:none;
+color:inherit;
+}
 
-    /* Hover hint */
-    .card::after {
-      content: "Open in new tab ↗";
-      position: absolute;
-      bottom: 40px;
-      right: 40px;
-      font-size: 0.9rem;
-      letter-spacing: 0.08em;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      z-index: 3;
-    }
+.card:hover{
+transform:scale(1.02);
+filter:brightness(1.1);
+}
 
-    .card:hover::after {
-      opacity: 1;
-    }
 
-    /* -------------------------
-       Content animation
-    ------------------------- */
-    .content {
-      position: relative;
-      text-align: center;
-      max-width: 900px;
-      padding: 2rem;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 0.8s ease;
-      z-index: 3;
-    }
+.video-card:hover{
+transform:none;
+filter:none;
+}
 
-    .card.visible .content {
-      opacity: 1;
-      transform: translateY(0);
-    }
+/* overlay */
 
-    h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      letter-spacing: -0.03em;
-    }
+.card::before{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(
+to bottom,
+rgba(0,0,0,0.55),
+rgba(0,0,0,0.75)
+);
+z-index:1;
+}
 
-    p {
-      font-size: clamp(1.1rem, 2vw, 1.4rem);
-      opacity: 0.85;
-      margin-top: 1rem;
-      line-height: 1.6;
-    }
+/* hover hint */
 
-    .hint {
-      margin-top: 1.5rem;
-      font-size: 0.95rem;
-      opacity: 0.75;
-    }
+.card::after{
+content:"Open in new tab ↗";
+position:absolute;
+bottom:40px;
+right:40px;
+font-size:0.9rem;
+letter-spacing:0.08em;
+opacity:0;
+transition:opacity 0.4s ease;
+z-index:3;
+}
 
-    /* -------------------------
-       Video background (Canva)
-    ------------------------- */
-    .video-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-    }
+.card:hover::after{
+opacity:1;
+}
 
-    .video-bg iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      pointer-events: none; /* prevents iframe from blocking clicks */
-      transform: scale(1.15);
-    }
+/* -------------------------
+CONTENT
+------------------------- */
 
-    /* -------------------------
-       Background images
-    ------------------------- */
-    .web {
-      background-image: url("https://www.stockvault.net/data/2020/11/08/280614/preview16.jpg");
-    }
+.content{
+position:relative;
+text-align:center;
+max-width:900px;
+padding:2rem;
+opacity:0;
+transform:translateY(40px);
+transition:all 0.8s ease;
+z-index:3;
+}
 
-    .media {
-      background-image: url("https://www.stockvault.net/data/2011/08/28/126444/preview16.jpg");
-    }
+.card.visible .content{
+opacity:1;
+transform:translateY(0);
+}
 
-    /* -------------------------
-       Spacers
-    ------------------------- */
-    .spacer {
-      height: 1vh;
-      background: #1c1c1c;
-    }
-  </style>
+h1{
+font-size:clamp(2.5rem,6vw,4.5rem);
+letter-spacing:-0.03em;
+}
+
+p{
+font-size:clamp(1.1rem,2vw,1.4rem);
+opacity:0.85;
+margin-top:1rem;
+line-height:1.6;
+}
+
+.hint{
+margin-top:1.5rem;
+font-size:0.95rem;
+opacity:0.75;
+}
+
+/* -------------------------
+BUTTONS
+------------------------- */
+
+.button{
+display:inline-block;
+margin-top:24px;
+padding:12px 24px;
+background:rgba(255,255,255,0.92);
+color:black;
+border-radius:8px;
+font-size:0.95rem;
+font-weight:600;
+}
+
+/* -------------------------
+SCROLL INDICATOR
+------------------------- */
+
+.scroll-indicator{
+position:absolute;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+font-size:1rem;
+opacity:0.85;
+animation:bounce 2s infinite;
+z-index:5;
+}
+
+@keyframes bounce{
+0%,100%{transform:translate(-50%,0);}
+50%{transform:translate(-50%,12px);}
+}
+
+/* -------------------------
+VIDEO
+------------------------- */
+
+video{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:0;
+}
+
+/* -------------------------
+IMAGES
+------------------------- */
+
+.web{
+background-image:url("https://www.stockvault.net/data/2020/11/08/280614/preview16.jpg");
+}
+
+.media{
+background-image:url("https://www.stockvault.net/data/2011/08/28/126444/preview16.jpg");
+}
+
+/* -------------------------
+SPACER
+------------------------- */
+
+.spacer{
+height:22px;
+background:linear-gradient(
+to bottom,
+transparent,
+rgba(255,255,255,0.15),
+transparent
+);
+}
+
+</style>
 </head>
 
 <body>
 
-  <main>
 
-    <!-- HERO VIDEO CARD -->
-    <a class="card video-card"
-       href="https://sites.google.com/view/swanson-custom-enterprises/site-details"
-       target="_blank"
-       rel="noopener noreferrer">
+<!-- HERO -->
 
- <video autoplay muted loop playsinline
-  style="
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    z-index:0;
-  ">
-  <source src="https://swanson-custom-enterprises-inc.github.io/swanson-video-host/Intro%20to%20Swanson%20Custom%20Enterprises(2).mp4" type="video/mp4">
+<a id="hero" class="card video-card"
+href="https://sites.google.com/view/swanson-custom-enterprises/site-details"
+target="_blank"
+rel="noopener noreferrer">
+
+<video autoplay muted loop playsinline>
+<source src="https://swanson-custom-enterprises-inc.github.io/swanson-video-host/Intro%20to%20Swanson%20Custom%20Enterprises(2).mp4" type="video/mp4">
 </video>
 
-      <div class="content">
-        <h1>Swanson Custom Enterprises International</h1>
-        <p>Web Development • Audio Visual • Multimedia Production</p>
-        <div class="hint">
-          Scroll down for more information<br>
-          Click anywhere to open pages
-        </div>
-      </div>
+<div class="content">
 
-    </a>
+<h1>Swanson Custom Enterprises International</h1>
 
-    <!-- Optional widget -->
-    <script src="https://static.elfsight.com/platform/platform.js" async></script>
-    <div class="elfsight-app-cf4345d8-cdda-49b3-8aae-174cf857defb" data-elfsight-app-lazy></div>
+<p>Web Development • Audio Visual • Multimedia Production</p>
 
-    <div class="spacer"></div>
+<div class="hint">
+Scroll down to explore our services
+</div>
 
-    <!-- WEB DEVELOPMENT -->
-    <a class="card web"
-       href="https://sites.google.com/view/swanson-custom-enterprises/website-development"
-       target="_blank"
-       rel="noopener noreferrer">
-      <div class="content">
-        <h1>Web Development</h1>
-        <p>Websites tailored to fit your needs</p>
-      </div>
-    </a>
+<div class="button">
+Open Company Overview →
+</div>
 
-    <div class="spacer"></div>
+</div>
 
-    <!-- MULTIMEDIA -->
-    <a class="card media"
-       href="https://sites.google.com/view/swanson-custom-enterprises/multimedia-broadcasting"
-       target="_blank"
-       rel="noopener noreferrer">
-      <div class="content">
-        <h1>Multimedia Recording</h1>
-        <p>Video production, livestreaming, and studio-quality capture solutions</p>
-      </div>
-    </a>
+<div class="scroll-indicator">
+↓ Scroll
+</div>
 
-  </main>
+</a>
 
-  <script>
-    /* -------------------------
-       Scroll reveal animation
-    ------------------------- */
-    const cards = document.querySelectorAll(".card");
+<!-- WIDGET -->
 
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.4 }
-    );
+<script src="https://static.elfsight.com/platform/platform.js" async></script>
+<div class="elfsight-app-cf4345d8-cdda-49b3-8aae-174cf857defb" data-elfsight-app-lazy></div>
 
-    cards.forEach(card => observer.observe(card));
-  </script>
+<div class="spacer"></div>
+
+<!-- WEB -->
+
+<a id="web" class="card web"
+href="https://sites.google.com/view/swanson-custom-enterprises/website-development"
+target="_blank"
+rel="noopener noreferrer">
+
+<div class="content">
+
+<h1>Web Development</h1>
+
+<p>Websites tailored to fit your needs</p>
+
+<div class="button">
+View Web Services →
+</div>
+
+</div>
+
+</a>
+
+<div class="spacer"></div>
+
+<!-- MEDIA -->
+
+<a id="media" class="card media"
+href="https://sites.google.com/view/swanson-custom-enterprises/multimedia-broadcasting"
+target="_blank"
+rel="noopener noreferrer">
+
+<div class="content">
+
+<h1>Multimedia Recording</h1>
+
+<p>Video production, livestreaming, and studio-quality capture solutions</p>
+
+<div class="button">
+View Multimedia Services →
+</div>
+
+</div>
+
+</a>
+
+</main>
+
+<script>
+
+/* Scroll reveal animation */
+
+const cards=document.querySelectorAll(".card");
+
+const observer=new IntersectionObserver(
+entries=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){
+entry.target.classList.add("visible");
+}
+});
+},
+{threshold:0.4}
+);
+
+cards.forEach(card=>observer.observe(card));
+
+</script>
 
 </body>
 </html>
-
