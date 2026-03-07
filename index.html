@@ -1,302 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-D686SRD49Y"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-D686SRD49Y');
-</script>
-
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="msvalidate.01" content="52B9F7BE856E619B8CF07726EA7A727A" />
-
-<title>Swanson Custom Enterprises</title>
-
-<style>
-
-/* -------------------------
-GLOBAL
-------------------------- */
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
-
-html{
-scroll-behavior:smooth;
-}
-
-body{
-background:#1c1c1c;
-color:white;
-overflow-x:hidden;
-}
-
-main{
-scroll-snap-type:y mandatory;
-}
-
-/* -------------------------
-CARDS
-------------------------- */
-
-.card{
-height:100vh;
-position:relative;
-display:flex;
-align-items:center;
-justify-content:center;
-scroll-snap-align:start;
-background-size:cover;
-background-position:center;
-transition:transform 1s ease,filter 1s ease;
-cursor:pointer;
-text-decoration:none;
-color:inherit;
-}
-
-.card:hover{
-transform:scale(1.02);
-filter:brightness(1.1);
-}
-
-
-.video-card:hover{
-transform:none;
-filter:none;
-}
-
-/* overlay */
-
-.card::before{
-content:"";
-position:absolute;
-inset:0;
-
-z-index:1;
-}
-
-/* hover hint */
-
-.card::after{
-content:"Open in new tab ↗";
-position:absolute;
-bottom:40px;
-right:40px;
-font-size:0.9rem;
-letter-spacing:0.08em;
-opacity:0;
-transition:opacity 0.4s ease;
-z-index:3;
-}
-
-.card:hover::after{
-opacity:1;
-}
-
-/* -------------------------
-CONTENT
-------------------------- */
-
-.content{
-position:relative;
-text-align:center;
-max-width:900px;
-padding:2rem;
-opacity:0;
-transform:translateY(40px);
-transition:all 0.8s ease;
-z-index:3;
-}
-
-.card.visible .content{
-opacity:1;
-transform:translateY(0);
-}
-
-h1{
-font-size:clamp(2.5rem,6vw,4.5rem);
-letter-spacing:-0.03em;
-}
-
-p{
-font-size:clamp(1.1rem,2vw,1.4rem);
-opacity:0.85;
-margin-top:1rem;
-line-height:1.6;
-}
-
-.hint{
-margin-top:1.5rem;
-font-size:0.95rem;
-opacity:0.75;
-}
-
-/* -------------------------
-BUTTONS
-------------------------- */
-
-.button{
-display:inline-block;
-margin-top:24px;
-padding:12px 24px;
-background: #ffffff;
-color:black;
-border-radius:8px;
-font-size:0.95rem;
-font-weight:600;
-}
-button:hover{
-  background: #f0f0f0; 
-}
-/* -------------------------
-SCROLL INDICATOR
-------------------------- */
-
-.scroll-indicator{
-position:absolute;
-bottom:20px;
-left:50%;
-transform:translateX(-50%);
-font-size:1rem;
-opacity:0.85;
-animation:bounce 2s infinite;
-z-index:5;
-}
-
-@keyframes bounce{
-0%,100%{transform:translate(-50%,0);}
-50%{transform:translate(-50%,12px);}
-}
-
-/* -------------------------
-VIDEO
-------------------------- */
-
-video{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-object-fit:cover;
-z-index:0;
-}
-
-/* -------------------------
-IMAGES
-------------------------- */
-
-.web{
-background-image:url("https://www.stockvault.net/data/2020/11/08/280614/preview16.jpg");
-}
-
-.media{
-background-image:url("https://www.stockvault.net/data/2011/08/28/126444/preview16.jpg");
-}
-
-/* -------------------------
-SPACER
-------------------------- */
-
-.spacer{
-height:22px;
-background: #000000;
-);
-}
-
-</style>
+<meta charset="UTF-8">
+<title>Homepage</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-<div data-include="components/sidenav.html"></div>
+<div id="nav"></div>
 
 <main>
 
-<!-- HERO -->
-
 <section class="hero">
-
-<video autoplay muted loop playsinline>
-<source src="https://swanson-custom-enterprises-inc.github.io/swanson-video-host/Intro%20to%20Swanson%20Custom%20Enterprises(2).mp4" type="video/mp4">
-</video>
-
-<div class="hero-content">
-
-<h1>SITE MAINTENANCE IS BEING PERFORMED!</h1>
-
-<p>
-Web Development • Audio Visual • Multimedia Production
-</p>
-
-<a class="hero-button" href="web.html">
-Explore Services
-</a>
-
-</div>
-
+<h1>Welcome</h1>
+<p>Multimedia Systems Platform</p>
 </section>
 
-<!-- SERVICES -->
+<section class="hero-cards">
 
-<section class="services">
-
-<h2>Our Services</h2>
-
-<div class="service-grid">
-
-<a class="service-card" href="web.html">
-<h3>🌐 Web Development</h3>
-<p>Custom websites and online systems built for your needs.</p>
-</a>
-
-<a class="service-card" href="multimedia.html">
-<h3>🎥 Multimedia Recording</h3>
-<p>Professional video production and livestream systems.</p>
-</a>
-
-<a class="service-card" href="#">
-<h3>🔊 Audio Visual Systems</h3>
-<p>Sound systems, recording studios, and broadcast setups.</p>
-</a>
-
+<div class="card">
+<h3>Studios</h3>
+<p>Recording and broadcast systems</p>
 </div>
 
-</section>
+<div class="card">
+<h3>Production</h3>
+<p>Media and editing tools</p>
+</div>
 
-<!-- CALL TO ACTION -->
-
-<section class="cta">
-
-<h2>Start Your Project Today</h2>
-
-<p>
-We help businesses, churches, and organizations build modern digital systems.
-</p>
-
-<a class="cta-button" href="#">
-Contact Us
-</a>
+<div class="card">
+<h3>Distribution</h3>
+<p>Streaming and publishing</p>
+</div>
 
 </section>
 
 </main>
 
-<div data-include="components/footer.html"></div>
+<div id="footer"></div>
 
-<script src="js/include.js"></script>
-<script src="js/nav.js"></script>
+<script src="js/components.js"></script>
 
 </body>
 </html>
-
-
-
-
