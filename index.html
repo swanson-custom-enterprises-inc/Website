@@ -69,7 +69,7 @@ margin:14px 0;
 }
 
 #menuButton{
-display:none;
+display:block;
 background:none;
 border:none;
 color:white;
@@ -123,7 +123,11 @@ filter:none;
 content:"";
 position:absolute;
 inset:0;
-background:linear-gradient(to bottom, rgba(0,0,0,.2), rgba(0,0,0,.65));
+background:linear-gradient(
+to bottom,
+rgba(0,0,0,0.55),
+rgba(0,0,0,0.75)
+);
 z-index:1;
 }
 
@@ -415,3 +419,4 @@ sidebar.classList.toggle("open");
 
 </body>
 </html>
+
