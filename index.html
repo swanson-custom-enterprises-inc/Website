@@ -214,119 +214,89 @@ background: #000000;
 
 </style>
 </head>
-
 <body>
 
+<div data-include="components/sidenav.html"></div>
+
+<main>
 
 <!-- HERO -->
 
-<a id="hero" class="card video-card"
-href="https://sites.google.com/view/swanson-custom-enterprises/site-details"
-target="_blank"
-rel="noopener noreferrer">
+<section class="hero">
 
 <video autoplay muted loop playsinline>
 <source src="https://swanson-custom-enterprises-inc.github.io/swanson-video-host/Intro%20to%20Swanson%20Custom%20Enterprises(2).mp4" type="video/mp4">
 </video>
 
-<div class="content">
+<div class="hero-content">
 
-<h1>Swanson Custom Enterprises International</h1>
+<h1>SITE MAINTENANCE IS BEING PERFORMED!</h1>
 
-<p>Web Development • Audio Visual • Multimedia Production</p>
+<p>
+Web Development • Audio Visual • Multimedia Production
+</p>
 
-<div class="hint">
-Scroll down to explore our services
-</div>
-
-<div class="button">
-Open Company Overview →
-</div>
-
-</div>
-
-<div class="scroll-indicator">
-↓ Scroll
-</div>
-
+<a class="hero-button" href="web.html">
+Explore Services
 </a>
 
-<!-- WIDGET -->
-
-<script src="https://static.elfsight.com/platform/platform.js" async></script>
-<div class="elfsight-app-cf4345d8-cdda-49b3-8aae-174cf857defb" data-elfsight-app-lazy></div>
-
-<div class="spacer"></div>
-
-<!-- WEB -->
-
-<a id="web" class="card web"
-href="https://sites.google.com/view/swanson-custom-enterprises/website-development"
-target="_blank"
-rel="noopener noreferrer">
-
-<div class="content">
-
-<h1>Web Development</h1>
-
-<p>Websites tailored to fit your needs</p>
-
-<div class="button">
-View Web Services →
 </div>
 
-</div>
+</section>
 
+<!-- SERVICES -->
+
+<section class="services">
+
+<h2>Our Services</h2>
+
+<div class="service-grid">
+
+<a class="service-card" href="web.html">
+<h3>🌐 Web Development</h3>
+<p>Custom websites and online systems built for your needs.</p>
 </a>
 
-<div class="spacer"></div>
-
-<!-- MEDIA -->
-
-<a id="media" class="card media"
-href="https://sites.google.com/view/swanson-custom-enterprises/multimedia-broadcasting"
-target="_blank"
-rel="noopener noreferrer">
-
-<div class="content">
-
-<h1>Multimedia Recording</h1>
-
-<p>Video production, livestreaming, and studio-quality capture solutions</p>
-
-<div class="button">
-View Multimedia Services →
-</div>
-
-</div>
-
+<a class="service-card" href="multimedia.html">
+<h3>🎥 Multimedia Recording</h3>
+<p>Professional video production and livestream systems.</p>
 </a>
+
+<a class="service-card" href="#">
+<h3>🔊 Audio Visual Systems</h3>
+<p>Sound systems, recording studios, and broadcast setups.</p>
+</a>
+
+</div>
+
+</section>
+
+<!-- CALL TO ACTION -->
+
+<section class="cta">
+
+<h2>Start Your Project Today</h2>
+
+<p>
+We help businesses, churches, and organizations build modern digital systems.
+</p>
+
+<a class="cta-button" href="#">
+Contact Us
+</a>
+
+</section>
 
 </main>
 
-<script>
+<div data-include="components/footer.html"></div>
 
-/* Scroll reveal animation */
-
-const cards=document.querySelectorAll(".card");
-
-const observer=new IntersectionObserver(
-entries=>{
-entries.forEach(entry=>{
-if(entry.isIntersecting){
-entry.target.classList.add("visible");
-}
-});
-},
-{threshold:0.4}
-);
-
-cards.forEach(card=>observer.observe(card));
-
-</script>
+<script src="js/include.js"></script>
+<script src="js/nav.js"></script>
 
 </body>
 </html>
+
 
 
 
