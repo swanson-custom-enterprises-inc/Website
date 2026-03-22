@@ -14,7 +14,8 @@ scroll-behavior:smooth;
 }
 
 body{
-background:#000;
+background:#35A2EF;
+
 color:white;
 overflow-x:hidden;
 }
@@ -24,7 +25,7 @@ NAVIGATION
 ------------------------- */
 
 #sidebar{
-background:#35A2EF;
+background:#5AB3F2;
 color:white;
 height:100%;
 width:260px;
@@ -41,6 +42,10 @@ color:white;
 text-decoration:none;
 display:block;
 margin:14px 0;
+}
+#sidebar a:hover {
+    font-weight: bold;           /* Makes text bold */
+    text-decoration: underline;  /* Optional: underline on hover */
 }
 
 #menuButton{
@@ -127,7 +132,7 @@ SPACER
 
 .spacer{
 height:22px;
-background:#000;
+background:#35A2EF;
 }
 
 /* -------------------------
@@ -137,7 +142,7 @@ MOBILE
 @media (max-width:900px){
 
 #sidebar{
-background:#000;
+background:#35A2EF;
 color:white;
 
 height:100%;
@@ -176,8 +181,8 @@ top:20px;
 left:20px;
 z-index:1100;
 
-background:#000;
-color:white;
+background:#ffffff;
+color:black;
 
 border:none;
 font-size:1.6rem;
