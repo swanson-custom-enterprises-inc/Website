@@ -255,5 +255,23 @@ opacity:0.85;
 font-size:1.1rem;
 }
 /* -------------------------
-HEADER IMAGE (Google Sites style)
+FOOTER
 ------------------------- */
+  footer{
+background: ffffff;
+color: black;
+margin-left:260px;
+width:calc(100% - 260px);
+}
+  @media (max-width: 768px){
+
+main{
+margin-left:0;
+}
+
+footer{
+margin-left:0;
+width:100%;
+}
+
+}
