@@ -121,16 +121,16 @@ BUTTONS
 display:inline-block;
 margin-top:24px;
 padding:12px 24px;
-background: #4F7FFF;
-color: #ffffff;
+background:#4F7FFF;
+color:#ffffff;
 border-radius:8px;
 font-size:0.95rem;
 font-weight:600;
 }
 
 .button: hover{
-background: #ffffff;
-color: #000000;
+background:#ffffff;
+color:#000000;
 }
 
 
@@ -140,7 +140,7 @@ SPACER
 
 .spacer{
 height:22px;
-background:#ffffff;
+background:#FFFFFF;
 }
 
 /* -------------------------
