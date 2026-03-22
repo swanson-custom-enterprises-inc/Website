@@ -242,6 +242,7 @@ rgba(0,0,0,0.6)
 
 /* Text on top */
 .header-content{
+    color: white;
 position:relative;
 z-index:2;
 height:100%;
