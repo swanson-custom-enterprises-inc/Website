@@ -1,0 +1,107 @@
+<!--permalink:multimedia-broadcasting-->
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<!-- Google tag (gtag.js) -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D686SRD49Y"></script>
+
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-D686SRD49Y');
+</script>
+<meta name="description" content="Founded in 2023 by Nathaniel Swanson, Swanson Custom Enterprises International, also known as SCE, provides web development, multimedia recording, and audio visual production services to churches, small businesses, and individuals wanting to get found. Swanson Custom Enterprises is one of the best web designers in Topeka, Kansas USA">
+
+<!--<meta name="keywords" content="web development, multimedia production, audio visual systems, livestreaming, recording studios, media, technology, website, internet, digital, Swanson, sound, recording, sce, sce1, swanson custom, swanson custom enterprises, swanson enterprises, enterprises, topeka, kansas, content, content creator, content creations, cornerstone, cornerstone denison, trend strategics, ">
+-->
+<meta name="author" content="Swanson Custom Enterprises">
+
+<meta property="og:title" content="Swanson Custom Enterprises International">
+
+<meta property="og:description" content="Web Development • Audio Visual • Multimedia Production">
+
+<meta property="og:type" content="website">
+
+<meta property="og:url" content="https://swanson-custom-enterprises-inc.github.io/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msvalidate.01" content="52B9F7BE856E619B8CF07726EA7A727A">
+
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
+   <link rel="stylesheet" type="text/css" href="css/style.css">
+<title>Multimedia & Broadcasting</title>
+
+</head>
+
+<body>
+
+<div id="nav-placeholder"></div>
+
+  <main>
+
+<section class="page-header">
+
+<img src="https://sce1.com/assets/SCE%20noname.jpg" alt="Header Image">
+
+<div class="header-content">	
+<h1>Multimedia and Broadcasting</h1>
+</div>
+
+<div>
+<h3>Let's Get You Noticed!</h3>
+<p><br>We can get you a social media presence, even if you cannot pay premium prices. We can get you set up and ready to go quickly. We then equip you and your staff to be able to use your system to its fullest extent.<br></p>
+
+<div class="button-container">
+
+<a href="mailto: swanson.custom.enterprises@gmail.com" class="btn">
+Contact Us at swanson.custom.enterprises@gmail.com
+</a>
+
+</div>
+
+ <p>Email Us to get a quote today!<br>
+ <br><ul>
+ <h5>How it works</h5>
+
+ <li>We then work with you to find what you need
+
+<li>We will then give you a quote
+
+<li>We will provide you a set date for when we can come in and set up our systems
+
+<li>We will teach you how to use the systems and will provide you with free support
+ </ul></p>
+
+<!-- WIDGET -->
+
+<script src="https://static.elfsight.com/platform/platform.js" async></script>
+
+<div class="elfsight-app-cf4345d8-cdda-49b3-8aae-174cf857defb"></div>
+
+</main>
+
+  <div id="footer-placeholder"></div>
+
+<script src="js/include.js"></script>
+<script>
+
+/* Mobile menu toggle */
+
+const menuButton=document.getElementById("menuButton");
+const sidebar=document.getElementById("sidebar");
+
+menuButton.addEventListener("click",()=>{
+sidebar.classList.toggle("closed");
+});
+
+</script>
+
+</body>
+</html>
