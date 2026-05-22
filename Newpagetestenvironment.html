@@ -340,18 +340,6 @@ text-align:center;
 
 <div id="nav-placeholder"></div>
 
-<!-- ARROWS -->
-
-<button class="arrow left back-btn" 
-onclick="scrollCarousel(-1)">
-← Back
-</button>
-  
-  <button class="arrow right next-btn" 
-onclick="scrollCarousel(1)">
-Continue →
-</button>
-
 
 
 <!-- CAROUSEL -->
@@ -382,6 +370,11 @@ Learn More
 
 <a href="#" class="btn secondary">
 Continue
+    <button class="arrow right" 
+onclick="scrollCarousel(1)">
+Continue →
+</button>
+
 </a>
 
 </div>
@@ -405,7 +398,17 @@ organization, or multimedia project.
 </p>
 
 <div class="button-group">
+  <button class="arrow right" 
+onclick="scrollCarousel(1)">
+Continue →
+</button>
 
+
+  <button class="arrow left" 
+onclick="scrollCarousel(-1)">
+← Back
+</button>
+  
 <a href="https://sites.google.com/view/swanson-custom-enterprises/website-development"
 class="btn primary">
 Learn More
@@ -436,6 +439,11 @@ video production, and broadcasting solutions.
 <a href="https://sites.google.com/view/swanson-custom-enterprises/multimedia-broadcasting"
 class="btn primary">
 Learn More
+  <button class="arrow left" 
+onclick="scrollCarousel(-1)">
+← Back
+</button>
+  
 </a>
 
 </div>
@@ -507,49 +515,7 @@ setTimeout(updateButtons,500);
 
 }
 
-/* -------------------------
-BUTTON VISIBILITY
-------------------------- */
 
-function updateButtons(){
-
-const index=Math.round(
-carousel.scrollLeft/window.innerWidth
-);
-
-panels.forEach((panel,i)=>{
-
-const back=panel.querySelector(".back-btn");
-
-const next=panel.querySelector(".next-btn");
-
-/* hide back on first */
-
-if(back){
-
-back.style.display=
-i===0 ? "none" : "inline-block";
-
-}
-
-/* hide next on last */
-
-if(next){
-
-next.style.display=
-i===panels.length-1
-? "none"
-: "inline-block";
-
-}
-
-});
-
-}
-
-/* initialize */
-
-window.addEventListener("load",updateButtons);
 </script>
 <script src="js/include.js"></script>
 </body>
