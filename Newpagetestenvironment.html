@@ -435,40 +435,10 @@ Learn More
 <script>
 
 /* -------------------------
-WAIT FOR NAV TO LOAD
-------------------------- */
-
-function initializeNavigation(){
-
-const menuButton=document.getElementById("menuButton");
-
-const sidebar=document.getElementById("sidebar");
-
-if(!menuButton || !sidebar){
-
-setTimeout(initializeNavigation,100);
-
-return;
-
-}
-
-menuButton.addEventListener("click",()=>{
-
-sidebar.classList.toggle("open");
-
-});
-
-}
-
-initializeNavigation();
-
-/* -------------------------
 CAROUSEL
 ------------------------- */
 
 const carousel=document.getElementById("carousel");
-
-/* move carousel */
 
 function scrollCarousel(direction){
 
@@ -483,6 +453,39 @@ behavior:"smooth"
 
 }
 
+/* -------------------------
+NAVIGATION
+------------------------- */
+
+function setupNavigation(){
+
+const menuButton=document.getElementById("menuButton");
+
+const sidebar=document.getElementById("sidebar");
+
+if(menuButton && sidebar){
+
+menuButton.onclick=function(){
+
+sidebar.classList.toggle("open");
+
+};
+
+}
+
+}
+
+/* -------------------------
+WAIT FOR COMPONENTS
+------------------------- */
+
+window.addEventListener("load",()=>{
+
+/* slight delay so include.js finishes */
+
+setTimeout(setupNavigation,300);
+
+});
 </script>
 
 <!-- INCLUDE SYSTEM -->
