@@ -36,37 +36,24 @@ color:white;
 MENU BUTTON
 ------------------------- */
 
-#sidebar{
-background:#DEDEDE;
-color:black;
-height:100%;
-width:260px;
-position:fixed;
-left:0;
-top:0;
-padding:25px;
-z-index:1000;
-transition:transform 0.3s ease;
-}
-
-#sidebar a{
-color:black;
-text-decoration:none;
-display:block;
-margin:14px 0;
-}
-#sidebar a:hover {
-    font-weight: bold;           /* Makes text bold */
-    text-decoration: underline;  /* Optional: underline on hover */
-}
-
 #menuButton{
-display:block;
-background:none;
+position:fixed;
+top:20px;
+left:20px;
+
+z-index:3000;
+
+background:rgba(0,0,0,0.7);
+backdrop-filter:blur(10px);
+
 border:none;
-color:black;
-font-size:1.4rem;
-margin-bottom:20px;
+color:white;
+
+padding:12px 16px;
+
+font-size:1.3rem;
+border-radius:10px;
+
 cursor:pointer;
 }
 
@@ -350,7 +337,31 @@ text-align:center;
 <body>
 
 <!-- MENU BUTTON -->
-<div id="nav-placeholder"></div>
+
+<button id="menuButton">☰</button>
+
+<!-- SIDEBAR -->
+
+<nav id="sidebar">
+
+<a href="#">Home</a>
+
+<a href="https://sites.google.com/view/swanson-custom-enterprises/website-development">
+Website Development
+</a>
+
+<a href="https://sites.google.com/view/swanson-custom-enterprises/multimedia-broadcasting">
+Multimedia Broadcasting
+</a>
+
+<a href="#">Our Mission</a>
+
+<a href="#">Pricing</a>
+
+<a href="#">Contact</a>
+
+</nav>
+
 <!-- ARROWS -->
 
 <button class="arrow left" onclick="scrollCarousel(-1)">❮</button>
@@ -461,6 +472,7 @@ Learn More
 MENU
 ------------------------- */
 
+const menuButton=document.getElementById("menuButton");
 const sidebar=document.getElementById("sidebar");
 
 menuButton.addEventListener("click",()=>{
