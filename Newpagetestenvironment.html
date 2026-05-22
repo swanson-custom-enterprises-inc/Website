@@ -483,33 +483,33 @@ behavior:"smooth"
 
 }
 
-/* -------------------------
-CAROUSEL BUTTONS
-------------------------- */
-
-function scrollCarousel(direction){
-
-const carousel=document.getElementById("carousel");
-
-/* stop if carousel missing */
-
-if(!carousel)return;
-
-/* scroll exactly one screen */
-
-const scrollAmount=window.innerWidth;
-
-carousel.scrollBy({
-left:scrollAmount*direction,
-behavior:"smooth"
-});
-
-}
-
 
 const carousel=document.getElementById("carousel");
 
 const panels=document.querySelectorAll(".panel");
+
+/* -------------------------
+SCROLL FUNCTION
+------------------------- */
+
+function scrollCarousel(direction){
+
+const width=window.innerWidth;
+
+carousel.scrollBy({
+left:width*direction,
+behavior:"smooth"
+});
+
+/* wait for scroll to finish */
+
+setTimeout(updateButtons,500);
+
+}
+
+/* -------------------------
+BUTTON VISIBILITY
+------------------------- */
 
 function updateButtons(){
 
@@ -520,23 +520,34 @@ carousel.scrollLeft/window.innerWidth
 panels.forEach((panel,i)=>{
 
 const back=panel.querySelector(".back-btn");
+
 const next=panel.querySelector(".next-btn");
 
+/* hide back on first */
+
 if(back){
-back.style.display=i===0 ? "none" : "inline-block";
+
+back.style.display=
+i===0 ? "none" : "inline-block";
+
 }
 
+/* hide next on last */
+
 if(next){
-next.style.display=i===panels.length-1
+
+next.style.display=
+i===panels.length-1
 ? "none"
 : "inline-block";
+
 }
 
 });
 
 }
 
-carousel.addEventListener("scroll",updateButtons);
+/* initialize */
 
 window.addEventListener("load",updateButtons);
 </script>
