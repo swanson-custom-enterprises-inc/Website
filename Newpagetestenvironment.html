@@ -94,10 +94,14 @@ text-decoration:none;
 
 font-size:1rem;
 opacity:0.85;
+
+transition:0.2s;
 }
 
 #sidebar a:hover{
 opacity:1;
+font-weight:bold;
+text-decoration:underline;
 }
 
 /* -------------------------
@@ -226,6 +230,9 @@ text-decoration:none;
 font-weight:600;
 
 transition:all 0.25s ease;
+
+cursor:pointer;
+border:none;
 }
 
 /* Primary */
@@ -244,45 +251,13 @@ transform:translateY(-2px);
 
 .btn.secondary{
 border:2px solid white;
+background:transparent;
 color:white;
 }
 
 .btn.secondary:hover{
 background:white;
 color:black;
-}
-
-/* -------------------------
-ARROWS
-------------------------- */
-
-.arrow{
-position:absolute;
-top:50%;
-
-transform:translateY(-50%);
-
-z-index:2000;
-
-background:rgba(0,0,0,0.5);
-
-border:none;
-color:white;
-
-font-size:2rem;
-
-padding:10px 16px;
-
-cursor:pointer;
-border-radius:10px;
-}
-
-.arrow.left{
-left:20px;
-}
-
-.arrow.right{
-right:20px;
 }
 
 /* -------------------------
@@ -336,19 +311,9 @@ text-align:center;
 
 <body>
 
-<!-- menu -->
+<!-- NAVIGATION -->
 
 <div id="nav-placeholder"></div>
-
-<button class="btn secondary"
-onclick="scrollCarousel(1)">
-Continue →
-</button>
-
-    <button class="btn secondary"
-onclick="scrollCarousel(-1)">
-← Back
-</button>
 
 <!-- CAROUSEL -->
 
@@ -372,14 +337,15 @@ Web Development • Multimedia Production • Audio Visual
 
 <div class="button-group">
 
-<a href="#" class="btn primary">
+<a href="https://www.sce1.com/about"
+class="btn primary">
 Learn More
 </a>
 
-<a href="#" class="btn secondary">
-Continue
-    </a>
-
+<button class="btn secondary"
+onclick="scrollCarousel(1)">
+Continue →
+</button>
 
 </div>
 
@@ -401,12 +367,22 @@ Modern websites tailored to your business,
 organization, or multimedia project.
 </p>
 
+<div class="button-group">
 
-  
-<a href="https://sites.google.com/view/swanson-custom-enterprises/website-development"
+<button class="btn secondary"
+onclick="scrollCarousel(-1)">
+← Back
+</button>
+
+<a href="https://www.sce1.com/websites"
 class="btn primary">
 Learn More
 </a>
+
+<button class="btn secondary"
+onclick="scrollCarousel(1)">
+Continue →
+</button>
 
 </div>
 
@@ -430,12 +406,16 @@ video production, and broadcasting solutions.
 
 <div class="button-group">
 
-<a href="https://sites.google.com/view/swanson-custom-enterprises/multimedia-broadcasting"
+<button class="btn secondary"
+onclick="scrollCarousel(-1)">
+← Back
+</button>
+
+<a href="https://www.sce1.com/multimedia"
 class="btn primary">
 Learn More
 </a>
 
-    
 </div>
 
 </div>
@@ -450,13 +430,27 @@ Learn More
 © 2026 Swanson Custom Enterprises International
 </footer>
 
+<!-- SCRIPTS -->
+
 <script>
 
 /* -------------------------
-MENU
+WAIT FOR NAV TO LOAD
 ------------------------- */
 
+function initializeNavigation(){
+
+const menuButton=document.getElementById("menuButton");
+
 const sidebar=document.getElementById("sidebar");
+
+if(!menuButton || !sidebar){
+
+setTimeout(initializeNavigation,100);
+
+return;
+
+}
 
 menuButton.addEventListener("click",()=>{
 
@@ -464,60 +458,21 @@ sidebar.classList.toggle("open");
 
 });
 
+}
+
+initializeNavigation();
+
 /* -------------------------
 CAROUSEL
 ------------------------- */
 
 const carousel=document.getElementById("carousel");
 
-function scrollCarousel(direction){
-
-const width=window.innerWidth;
-
-carousel.scrollBy({
-left:width*direction,
-behavior:"smooth"
-});
-
-}
-
-
-const carousel=document.getElementById("carousel");
-
-const panels=document.querySelectorAll(".panel");
-
-/* -------------------------
-SCROLL FUNCTION
-------------------------- */
+/* move carousel */
 
 function scrollCarousel(direction){
-
-const width=window.innerWidth;
-
-carousel.scrollBy({
-left:width*direction,
-behavior:"smooth"
-});
-
-/* wait for scroll to finish */
-
-setTimeout(updateButtons,500);
-
-}
-
-    /* -------------------------
-CAROUSEL BUTTONS
-------------------------- */
-
-function scrollCarousel(direction){
-
-const carousel=document.getElementById("carousel");
-
-/* stop if carousel missing */
 
 if(!carousel)return;
-
-/* scroll exactly one screen */
 
 const scrollAmount=window.innerWidth;
 
@@ -528,8 +483,11 @@ behavior:"smooth"
 
 }
 
-
 </script>
+
+<!-- INCLUDE SYSTEM -->
+
 <script src="js/include.js"></script>
+
 </body>
 </html>
