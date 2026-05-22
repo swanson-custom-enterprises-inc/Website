@@ -339,18 +339,18 @@ text-align:center;
 <!-- menu -->
 
 <div id="nav-placeholder"></div>
-<nav>
-  <a href="#">Home</a>
 
-<a href="#">Web Development</a>
-
-<a href="#">Multimedia</a>
-  </nav>
 <!-- ARROWS -->
 
-<button class="arrow left" onclick="scrollCarousel(-1)">❮</button>
+  <button class="btn secondary"
+onclick="scrollCarousel(1)">
+Continue →
+</button>
 
-<button class="arrow right" onclick="scrollCarousel(1)">❯</button>
+<button class="btn secondary"
+onclick="scrollCarousel(-1)">
+← Back
+</button>
 
 <!-- CAROUSEL -->
 
@@ -480,6 +480,30 @@ behavior:"smooth"
 });
 
 }
+
+/* -------------------------
+CAROUSEL BUTTONS
+------------------------- */
+
+function scrollCarousel(direction){
+
+const carousel=document.getElementById("carousel");
+
+/* stop if carousel missing */
+
+if(!carousel)return;
+
+/* scroll exactly one screen */
+
+const scrollAmount=window.innerWidth;
+
+carousel.scrollBy({
+left:scrollAmount*direction,
+behavior:"smooth"
+});
+
+}
+
 
 </script>
 <script src="js/include.js"></script>
