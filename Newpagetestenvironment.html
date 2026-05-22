@@ -516,6 +516,29 @@ setTimeout(updateButtons,500);
 
 }
 
+    /* -------------------------
+CAROUSEL BUTTONS
+------------------------- */
+
+function scrollCarousel(direction){
+
+const carousel=document.getElementById("carousel");
+
+/* stop if carousel missing */
+
+if(!carousel)return;
+
+/* scroll exactly one screen */
+
+const scrollAmount=window.innerWidth;
+
+carousel.scrollBy({
+left:scrollAmount*direction,
+behavior:"smooth"
+});
+
+}
+
 
 </script>
 <script src="js/include.js"></script>
