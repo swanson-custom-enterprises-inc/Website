@@ -5,9 +5,60 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Swanson Custom Enterprises</title>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JM4SV7GXPB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-<meta name="description" content="Web Development, Multimedia Production, and Audio Visual Services">
+  gtag('config', 'G-JM4SV7GXPB');
+</script>
+
+<!-- Primary SEO -->
+<title>Church Website Development & Tech Support Services | Swanson Custom Enterprises</title>
+
+<meta name="description" content="Professional church website development and tech support services for ministries across the United States. Swanson Custom Enterprises helps churches improve their online presence, livestream quality, and digital outreach.">
+
+<meta name="author" content="Swanson Custom Enterprises">
+
+<link rel="canonical" href="https://sce1.com/">
+
+<!-- Open Graph (Facebook, LinkedIn, etc.) -->
+<meta property="og:title" content="Church Website Development & Tech Support Services">
+<meta property="og:description" content="Helping churches across the US with website development, livestreaming, audio visual systems, and digital ministry support.">
+<meta property="og:url" content="https://sce1.com/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://sce1.com/assets/og-image.jpg">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Church Website Development & Tech Support Services">
+<meta name="twitter:description" content="Church-focused website development, livestreaming support, and AV tech services for ministries nationwide.">
+<meta name="twitter:image" content="https://sce1.com/assets/og-image.jpg">
+
+<!-- Mobile & Browser -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0a0a">
+
+<!-- LocalBusiness Schema (HUGE for SEO) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Swanson Custom Enterprises International",
+  "url": "https://sce1.com/",
+  "image": "https://sce1.com/assets/og-image.jpg",
+  "description": "Church website development and church tech support services for ministries across the United States.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Topeka",
+    "addressRegion": "KS",
+    "addressCountry": "US"
+  },
+  "areaServed": "US",
+}
+</script>
 
 <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 
@@ -104,89 +155,12 @@ font-weight:bold;
 text-decoration:underline;
 }
 
-/* -------------------------
-CAROUSEL
-------------------------- */
-
-.carousel{
-display:flex;
-
-width:100vw;
-height:100vh;
-
-overflow-x:auto;
-overflow-y:hidden;
-
-scroll-snap-type:x mandatory;
-scroll-behavior:smooth;
-}
-
-.carousel::-webkit-scrollbar{
-display:none;
-}
-
-/* -------------------------
-PANELS
-------------------------- */
-
-.panel{
-position:relative;
-
-min-width:100vw;
-height:100vh;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-overflow:hidden;
-
-scroll-snap-align:start;
-
-background-size:cover;
-background-position:center;
-}
-
-/* -------------------------
-OVERLAY
-------------------------- */
-
-.panel::before{
-content:"";
-
-position:absolute;
-inset:0;
-
-background:linear-gradient(
-to bottom,
-rgba(0,0,0,0.45),
-rgba(0,0,0,0.78)
-);
-
-z-index:1;
-}
-
-/* -------------------------
-VIDEO BACKGROUND
-------------------------- */
-
-.panel video{
-position:absolute;
-inset:0;
-
-width:100%;
-height:100%;
-
-object-fit:cover;
-
-z-index:0;
-}
 
 /* -------------------------
 CONTENT
 ------------------------- */
 
-.panel-content{
+.content{
 position:relative;
 z-index:2;
 
@@ -196,12 +170,12 @@ padding:2rem;
 text-align:center;
 }
 
-.panel-content h1{
+.content h1{
 font-size:clamp(2.5rem,6vw,5rem);
 margin-bottom:20px;
 }
 
-.panel-content p{
+.content p{
 font-size:clamp(1rem,2vw,1.3rem);
 opacity:0.85;
 line-height:1.6;
@@ -315,19 +289,12 @@ text-align:center;
 
 <div id="nav-placeholder"></div>
 
-<!-- CAROUSEL -->
-
-<div class="carousel" id="carousel">
 
 <!-- HERO PANEL -->
 
-<section class="panel">
+<section\>
 
-<video autoplay muted loop playsinline>
-<source src="https://swanson-custom-enterprises-inc.github.io/swanson-video-host/Intro%20to%20Swanson%20Custom%20Enterprises(2).mp4" type="video/mp4">
-</video>
-
-<div class="panel-content">
+<div class="content">
 
 <h1>Swanson Custom Enterprises</h1>
 
@@ -337,7 +304,7 @@ Web Development • Multimedia Production • Audio Visual
 
 <div class="button-group">
 
-<a href="https://www.sce1.com/about"
+<a href="https://www.sce1.com/our-goal"
 class="btn primary">
 Learn More
 </a>
@@ -353,74 +320,7 @@ Continue →
 
 </section>
 
-<!-- WEB PANEL -->
 
-<section class="panel"
-style="background-image:url('https://www.stockvault.net/data/2020/11/08/280614/preview16.jpg')">
-
-<div class="panel-content">
-
-<h1>Web Development</h1>
-
-<p>
-Modern websites tailored to your business,
-organization, or multimedia project.
-</p>
-
-<div class="button-group">
-
-<button class="btn secondary"
-onclick="scrollCarousel(-1)">
-← Back
-</button>
-
-<a href="https://www.sce1.com/websites"
-class="btn primary">
-Learn More
-</a>
-
-<button class="btn secondary"
-onclick="scrollCarousel(1)">
-Continue →
-</button>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- MEDIA PANEL -->
-
-<section class="panel"
-style="background-image:url('https://www.stockvault.net/data/2011/08/28/126444/preview16.jpg')">
-
-<div class="panel-content">
-
-<h1>Multimedia Production</h1>
-
-<p>
-Livestreaming, studio recording,
-video production, and broadcasting solutions.
-</p>
-
-<div class="button-group">
-
-<button class="btn secondary"
-onclick="scrollCarousel(-1)">
-← Back
-</button>
-
-<a href="https://www.sce1.com/multimedia"
-class="btn primary">
-Learn More
-</a>
-
-</div>
-
-</div>
-
-</section>
 
 </div>
 
@@ -434,24 +334,6 @@ Learn More
 
 <script>
 
-/* -------------------------
-CAROUSEL
-------------------------- */
-
-const carousel=document.getElementById("carousel");
-
-function scrollCarousel(direction){
-
-if(!carousel)return;
-
-const scrollAmount=window.innerWidth;
-
-carousel.scrollBy({
-left:scrollAmount*direction,
-behavior:"smooth"
-});
-
-}
 
 /* -------------------------
 NAVIGATION
@@ -494,3 +376,7 @@ setTimeout(setupNavigation,300);
 
 </body>
 </html>
+
+
+
+
