@@ -14,7 +14,7 @@ scroll-behavior:smooth;
 }
 
 body{
-background:#ffffff;
+background-image: url('_t.png');
 
 overflow-x:hidden;
 }
