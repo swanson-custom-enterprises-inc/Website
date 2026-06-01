@@ -106,7 +106,7 @@ color:black;
 <div id="nav-placeholder"></div>
 
   <main>
-
+<div class="content">
 <section class="page-header">
 
 <img src="assets/Multimedia.png" alt="Header Image">
@@ -158,20 +158,46 @@ Contact Us at swanson.custom.enterprises@gmail.com
 </main>
 
   <div id="footer-placeholder"></div>
+	</div>
 
-<script src="js/include.js"></script>
-<script>
+/* -------------------------
+NAVIGATION
+------------------------- */
 
-/* Mobile menu toggle */
+function setupNavigation(){
 
 const menuButton=document.getElementById("menuButton");
+
 const sidebar=document.getElementById("sidebar");
 
-menuButton.addEventListener("click",()=>{
-sidebar.classList.toggle("closed");
-});
+if(menuButton && sidebar){
 
+menuButton.onclick=function(){
+
+sidebar.classList.toggle("open");
+
+};
+
+}
+
+}
+
+/* -------------------------
+WAIT FOR COMPONENTS
+------------------------- */
+
+window.addEventListener("load",()=>{
+
+/* slight delay so include.js finishes */
+
+setTimeout(setupNavigation,300);
+
+});
 </script>
+
+<!-- INCLUDE SYSTEM -->
+
+<script src="js/include.js"></script>
 
 </body>
 </html>
