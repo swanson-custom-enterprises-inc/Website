@@ -131,16 +131,7 @@ scroll-snap-type:y mandatory;
 CONTENT
 ------------------------- */
 
-.content{
-position:relative;
-text-align:center;
-max-width:900px;
-padding:2rem;
-opacity:0;
-transform:translateY(40px);
-transition:all 0.8s ease;
-z-index:3;
-}
+
 
 .card.visible .content{
 opacity:1;
