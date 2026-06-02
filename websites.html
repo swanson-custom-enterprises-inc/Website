@@ -1,4 +1,3 @@
-<!--permalink:websites-->
 <!DOCTYPE html>
 
 <html lang="en">
@@ -36,9 +35,14 @@ gtag('config', 'G-D686SRD49Y');
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/favicon.png">
    <link rel="stylesheet" type="text/css" href="css/style.css">
-<title>Web Developer</title>
+<title>WEBSITES BY SCE</title>
 <style>
 
+
+	body{
+margin:20px;
+		
+	}
 	/* -------------------------
 BUTTON CONTAINER (centers in main content)
 ------------------------- */
@@ -102,6 +106,8 @@ color:black;
 
   <main>
 
+	  <div class="content">
+
 <section class="page-header">
 
 <img src="assets/websites.jpeg" alt="Header Image">
@@ -147,23 +153,52 @@ View one of the websites we designed
 
 <div class="elfsight-app-cf4345d8-cdda-49b3-8aae-174cf857defb"></div>
 
+ /* <div id="footer-placeholder"></div> */
+	  
 </main>
 
-  <div id="footer-placeholder"></div>
 
-<script src="js/include.js"></script>
+</div>
 <script>
+/* -------------------------
+NAVIGATION
+------------------------- */
 
-/* Mobile menu toggle */
+function setupNavigation(){
 
 const menuButton=document.getElementById("menuButton");
+
 const sidebar=document.getElementById("sidebar");
 
-menuButton.addEventListener("click",()=>{
-sidebar.classList.toggle("closed");
-});
+if(menuButton && sidebar){
 
+menuButton.onclick=function(){
+
+sidebar.classList.toggle("open");
+
+};
+
+}
+
+}
+
+/* -------------------------
+WAIT FOR COMPONENTS
+------------------------- */
+
+window.addEventListener("load",()=>{
+
+/* slight delay so include.js finishes */
+
+setTimeout(setupNavigation,300);
+
+});
 </script>
+
+<!-- INCLUDE SYSTEM -->
+
+<script src="js/include.js"></script>
 
 </body>
 </html>
+
