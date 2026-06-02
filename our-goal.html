@@ -36,9 +36,14 @@ gtag('config', 'G-D686SRD49Y');
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/favicon.png">
    <link rel="stylesheet" type="text/css" href="css/style.css">
-<title>Our Goal</title>
+<title>Multimedia</title>
 <style>
 
+
+	body{
+margin:20px;
+		
+	}
 	/* -------------------------
 BUTTON CONTAINER (centers in main content)
 ------------------------- */
@@ -102,6 +107,8 @@ color:black;
 
   <main>
 
+	  <div class="content">
+
 <section class="page-header">
 
 <img src="https://sce1.com/assets/SCE%20noname.jpg" alt="Header Image">
@@ -156,7 +163,6 @@ Contact Us at swanson.custom.enterprises@gmail.com
 
 <br></p>
 </div>
-
   
 <!-- WIDGET -->
 
@@ -164,28 +170,54 @@ Contact Us at swanson.custom.enterprises@gmail.com
 
 <div class="elfsight-app-cf4345d8-cdda-49b3-8aae-174cf857defb"></div>
 
+ /* <div id="footer-placeholder"></div> */
+	  
 </main>
 
-  <div id="footer-placeholder"></div>
 
-<script src="js/include.js"></script>
+</div>
 <script>
+/* -------------------------
+NAVIGATION
+------------------------- */
 
-/* Mobile menu toggle */
+function setupNavigation(){
 
 const menuButton=document.getElementById("menuButton");
+
 const sidebar=document.getElementById("sidebar");
 
-menuButton.addEventListener("click",()=>{
-sidebar.classList.toggle("closed");
-});
+if(menuButton && sidebar){
 
+menuButton.onclick=function(){
+
+sidebar.classList.toggle("open");
+
+};
+
+}
+
+}
+
+/* -------------------------
+WAIT FOR COMPONENTS
+------------------------- */
+
+window.addEventListener("load",()=>{
+
+/* slight delay so include.js finishes */
+
+setTimeout(setupNavigation,300);
+
+});
 </script>
+
+<!-- INCLUDE SYSTEM -->
+
+<script src="js/include.js"></script>
 
 </body>
 </html>
-
-
 
 
 
