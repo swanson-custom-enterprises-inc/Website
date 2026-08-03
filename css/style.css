@@ -328,3 +328,18 @@ border:2px solid black;
 background:#e6e6e6;
 color:white;
 }
+
+
+@media (max-width: 900px) {
+  .content {
+    margin-left: 4%;
+    margin-right: 4%;
+  }
+  footer {
+    margin-left: 0;
+    width: 100%;
+  }
+  #sidebar {
+    width: 100%;
+  }
+}
