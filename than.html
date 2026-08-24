@@ -135,6 +135,7 @@ Contact Me at swanson.custom.enterprises@gmail.com
 </a>
 <!-- =========================================================
      WEBSITE QUESTION FORM
+     GOOGLE APPS SCRIPT BACKEND
      ========================================================= -->
 
 <section id="website-question-section">
@@ -149,13 +150,16 @@ Contact Me at swanson.custom.enterprises@gmail.com
     </p>
 
 
-    <!--
-        Hidden iframe used to submit the form to Google Apps Script
-        without triggering a CORS problem or navigating the visitor.
-    -->
+    <!-- =====================================================
+         HIDDEN IFRAME
+         The form submits here so the visitor does not
+         leave the current webpage.
+         ===================================================== -->
+
     <iframe
         name="questionSubmissionFrame"
         id="questionSubmissionFrame"
+        title="Question submission"
         style="
             display:none;
             width:0;
@@ -165,19 +169,24 @@ Contact Me at swanson.custom.enterprises@gmail.com
     ></iframe>
 
 
+    <!-- =====================================================
+         QUESTION FORM
+         ===================================================== -->
+
     <form
         id="websiteQuestionForm"
-        action="YOUR_GOOGLE_APPS_SCRIPT_URL"
+        action="https://script.google.com/macros/s/AKfycbzH5BKQnn0NY6ibjQfQIBIsqD8qcHptUa5O2vw8Rbrpj8OkEFzvkSJOewExJWhlRKtezA/exec"
         method="POST"
         target="questionSubmissionFrame"
         autocomplete="on"
     >
 
-        <!-- =====================================================
-             OPTIONAL EMAIL
-             ===================================================== -->
 
-        <div>
+        <!-- =================================================
+             OPTIONAL EMAIL
+             ================================================= -->
+
+        <div class="question-form-field">
 
             <label for="visitorEmail">
                 Your Email
@@ -190,6 +199,7 @@ Contact Me at swanson.custom.enterprises@gmail.com
                 name="email"
                 autocomplete="email"
                 placeholder="you@example.com"
+                maxlength="254"
                 style="
                     width:100%;
                     padding:12px;
@@ -203,11 +213,11 @@ Contact Me at swanson.custom.enterprises@gmail.com
         </div>
 
 
-        <!-- =====================================================
+        <!-- =================================================
              QUESTION
-             ===================================================== -->
+             ================================================= -->
 
-        <div>
+        <div class="question-form-field">
 
             <label for="visitorQuestion">
                 Your Question
@@ -216,7 +226,7 @@ Contact Me at swanson.custom.enterprises@gmail.com
             <textarea
                 id="visitorQuestion"
                 name="question"
-                rows="3"
+                rows="5"
                 maxlength="2000"
                 required
                 placeholder="Type your question here..."
@@ -234,9 +244,13 @@ Contact Me at swanson.custom.enterprises@gmail.com
         </div>
 
 
-        <!-- =====================================================
+        <!-- =================================================
              INVISIBLE SPAM HONEYPOT
-             ===================================================== -->
+
+             Normal visitors never see or fill this field.
+             Bots that automatically fill every field may
+             trigger it.
+             ================================================= -->
 
         <div
             aria-hidden="true"
@@ -265,9 +279,9 @@ Contact Me at swanson.custom.enterprises@gmail.com
         </div>
 
 
-        <!-- =====================================================
-             HIDDEN INFORMATION SENT TO GOOGLE APPS SCRIPT
-             ===================================================== -->
+        <!-- =================================================
+             HIDDEN BACKEND INFORMATION
+             ================================================= -->
 
         <input
             type="hidden"
@@ -300,9 +314,9 @@ Contact Me at swanson.custom.enterprises@gmail.com
         >
 
 
-        <!-- =====================================================
+        <!-- =================================================
              SUBMIT BUTTON
-             ===================================================== -->
+             ================================================= -->
 
         <button
             type="submit"
@@ -322,9 +336,9 @@ Contact Me at swanson.custom.enterprises@gmail.com
         </button>
 
 
-        <!-- =====================================================
+        <!-- =================================================
              STATUS MESSAGE
-             ===================================================== -->
+             ================================================= -->
 
         <div
             id="questionFormMessage"
@@ -332,32 +346,48 @@ Contact Me at swanson.custom.enterprises@gmail.com
             aria-live="polite"
             style="
                 margin-top:15px;
+                min-height:24px;
             "
         ></div>
+
 
     </form>
 
 </section>
 
 
+
 <script>
+
+/* =========================================================
+   WEBSITE QUESTION FORM + PAGE TRACKING
+   ========================================================= */
+
 
 /* =========================================================
    CONFIGURATION
    ========================================================= */
 
-
 /*
- * PUT YOUR REAL GOOGLE APPS SCRIPT /exec URL HERE.
+ * Your Google Apps Script Web App /exec URL.
+ *
+ * This must be the deployed Web App URL.
  */
 const WEBSITE_BACKEND_URL =
-    "https://script.google.com/macros/s/AKfycbw5RiM_PTxck54J1TwruXmZBBMCkB6ZIu60WOWZPhHrmPQC0F-dOiZg9C_LypTP7Z6Bzw/exec";
+    "https://script.google.com/macros/s/AKfycbzH5BKQnn0NY6ibjQfQIBIsqD8qcHptUa5O2vw8Rbrpj8OkEFzvkSJOewExJWhlRKtezA/exec";
 
 
 /* =========================================================
-   VISITOR SESSION
+   GET / CREATE VISITOR SESSION ID
    ========================================================= */
 
+/*
+ * A visitor receives one session ID for the current
+ * browser session.
+ *
+ * This allows page views and questions to be associated
+ * with the same visitor session.
+ */
 
 function getVisitorSessionId() {
 
@@ -369,16 +399,22 @@ function getVisitorSessionId() {
 
     if (!sessionId) {
 
+        /*
+         * Use crypto.randomUUID when available.
+         */
         if (
             window.crypto &&
-            crypto.randomUUID
+            typeof window.crypto.randomUUID === "function"
         ) {
 
             sessionId =
-                crypto.randomUUID();
+                window.crypto.randomUUID();
 
         } else {
 
+            /*
+             * Fallback for older browsers.
+             */
             sessionId =
                 "visitor-" +
                 Date.now() +
@@ -407,7 +443,6 @@ function getVisitorSessionId() {
    PAGE INFORMATION
    ========================================================= */
 
-
 function getCurrentPage() {
 
     return window.location.href;
@@ -430,20 +465,27 @@ function getUserAgent() {
 
 
 /* =========================================================
-   PAGE TRACKING
+   PAGE VIEW TRACKING
    ========================================================= */
 
+/*
+ * Sends a page-view record to Google Apps Script.
+ *
+ * IMPORTANT:
+ * This function does NOT contain the old check that
+ * accidentally disabled page tracking when the correct
+ * backend URL was being used.
+ */
 
 function recordPageView() {
 
-    if (
-        !WEBSITE_BACKEND_URL ||
-        WEBSITE_BACKEND_URL ===
-        "https://script.google.com/macros/s/AKfycbw5RiM_PTxck54J1TwruXmZBBMCkB6ZIu60WOWZPhHrmPQC0F-dOiZg9C_LypTP7Z6Bzw/exec"
-    ) {
+    /*
+     * Make sure the backend URL exists.
+     */
+    if (!WEBSITE_BACKEND_URL) {
 
         console.warn(
-            "Google Apps Script URL has not been configured."
+            "Google Apps Script backend URL is missing."
         );
 
         return;
@@ -451,9 +493,13 @@ function recordPageView() {
     }
 
 
+    /*
+     * Build page-view data.
+     */
     const data = {
 
-        type: "pageview",
+        type:
+            "pageview",
 
         sessionId:
             getVisitorSessionId(),
@@ -473,10 +519,10 @@ function recordPageView() {
     };
 
 
-    /*
-     * sendBeacon is used for page tracking because
-     * the visitor doesn't need to wait for a response.
-     */
+    /* =====================================================
+       PRIMARY METHOD: sendBeacon
+       ===================================================== */
+
     try {
 
         if (
@@ -495,13 +541,18 @@ function recordPageView() {
                 );
 
 
-            navigator.sendBeacon(
-                WEBSITE_BACKEND_URL,
-                blob
-            );
+            const beaconSent =
+                navigator.sendBeacon(
+                    WEBSITE_BACKEND_URL,
+                    blob
+                );
 
 
-            return;
+            if (beaconSent) {
+
+                return;
+
+            }
 
         }
 
@@ -515,17 +566,19 @@ function recordPageView() {
     }
 
 
-    /*
-     * Fallback.
-     */
+    /* =====================================================
+       FALLBACK: fetch
+       ===================================================== */
+
     try {
 
         fetch(
             WEBSITE_BACKEND_URL,
             {
-                method:"POST",
+                method:
+                    "POST",
 
-                headers:{
+                headers: {
                     "Content-Type":
                         "text/plain;charset=UTF-8"
                 },
@@ -533,9 +586,11 @@ function recordPageView() {
                 body:
                     JSON.stringify(data),
 
-                keepalive:true
+                keepalive:
+                    true
             }
-        ).catch(
+        )
+        .catch(
             function(error) {
 
                 console.warn(
@@ -559,9 +614,8 @@ function recordPageView() {
 
 
 /* =========================================================
-   QUESTION FORM
+   FORM ELEMENTS
    ========================================================= */
-
 
 const questionForm =
     document.getElementById(
@@ -587,35 +641,84 @@ const questionFrame =
     );
 
 
+const visitorEmail =
+    document.getElementById(
+        "visitorEmail"
+    );
+
+
+const visitorQuestion =
+    document.getElementById(
+        "visitorQuestion"
+    );
+
+
+const websiteHoneypot =
+    document.getElementById(
+        "website"
+    );
+
+
 /* =========================================================
    PREPARE HIDDEN FORM VALUES
    ========================================================= */
 
-
 function prepareQuestionForm() {
 
-    document.getElementById(
-        "formSessionId"
-    ).value =
-        getVisitorSessionId();
+    const sessionField =
+        document.getElementById(
+            "formSessionId"
+        );
 
 
-    document.getElementById(
-        "formPage"
-    ).value =
-        getCurrentPage();
+    const pageField =
+        document.getElementById(
+            "formPage"
+        );
 
 
-    document.getElementById(
-        "formReferrer"
-    ).value =
-        getReferrer();
+    const referrerField =
+        document.getElementById(
+            "formReferrer"
+        );
 
 
-    document.getElementById(
-        "formUserAgent"
-    ).value =
-        getUserAgent();
+    const userAgentField =
+        document.getElementById(
+            "formUserAgent"
+        );
+
+
+    if (sessionField) {
+
+        sessionField.value =
+            getVisitorSessionId();
+
+    }
+
+
+    if (pageField) {
+
+        pageField.value =
+            getCurrentPage();
+
+    }
+
+
+    if (referrerField) {
+
+        referrerField.value =
+            getReferrer();
+
+    }
+
+
+    if (userAgentField) {
+
+        userAgentField.value =
+            getUserAgent();
+
+    }
 
 }
 
@@ -623,7 +726,6 @@ function prepareQuestionForm() {
 /* =========================================================
    EMAIL VALIDATION
    ========================================================= */
-
 
 function isValidEmail(email) {
 
@@ -634,224 +736,8 @@ function isValidEmail(email) {
 
 
 /* =========================================================
-   QUESTION FORM SUBMISSION
-   ========================================================= */
-
-
-if (questionForm) {
-
-    /*
-     * Fill hidden fields when page loads.
-     */
-    prepareQuestionForm();
-
-
-    questionForm.addEventListener(
-        "submit",
-        function(event) {
-
-            /*
-             * We are allowing the form to submit normally
-             * to the hidden iframe.
-             *
-             * This is intentional.
-             */
-
-            const email =
-                document
-                    .getElementById(
-                        "visitorEmail"
-                    )
-                    .value
-                    .trim();
-
-
-            const question =
-                document
-                    .getElementById(
-                        "visitorQuestion"
-                    )
-                    .value
-                    .trim();
-
-
-            const honeypot =
-                document
-                    .getElementById(
-                        "website"
-                    )
-                    .value
-                    .trim();
-
-
-            /*
-             * Required question.
-             */
-            if (!question) {
-
-                event.preventDefault();
-
-                showQuestionMessage(
-                    "Please enter your question.",
-                    true
-                );
-
-                return;
-
-            }
-
-
-            /*
-             * Optional email.
-             */
-            if (
-                email &&
-                !isValidEmail(email)
-            ) {
-
-                event.preventDefault();
-
-                showQuestionMessage(
-                    "Please enter a valid email address.",
-                    true
-                );
-
-                return;
-
-            }
-
-
-            /*
-             * Spam honeypot.
-             */
-            if (honeypot) {
-
-                event.preventDefault();
-
-                showQuestionMessage(
-                    "Your question could not be submitted.",
-                    true
-                );
-
-                return;
-
-            }
-
-
-            /*
-             * Make sure the hidden fields contain
-             * current information.
-             */
-            prepareQuestionForm();
-
-
-            /*
-             * Prevent accidental double submission.
-             */
-            questionButton.disabled =
-                true;
-
-
-            questionButton.textContent =
-                "Sending...";
-
-
-            showQuestionMessage(
-                "Sending your question...",
-                false
-            );
-
-
-            /*
-             * Because the form is being submitted to
-             * the hidden iframe, we don't call
-             * event.preventDefault().
-             */
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   HIDDEN IFRAME RESPONSE
-   ========================================================= */
-
-
-/*
- * Google Apps Script will load its response inside
- * the hidden iframe.
- *
- * We use the iframe load event to restore the button
- * and show the visitor a success message.
- */
-if (questionFrame) {
-
-    questionFrame.addEventListener(
-        "load",
-        function() {
-
-            /*
-             * Ignore the first load of the empty iframe.
-             */
-            if (
-                !questionButton.disabled
-            ) {
-
-                return;
-
-            }
-
-
-            /*
-             * Show success.
-             *
-             * The form was submitted to Google Apps Script.
-             */
-            showQuestionMessage(
-                "Thank you! Your question has been submitted.",
-                false
-            );
-
-
-            /*
-             * Clear the visible form.
-             */
-            document
-                .getElementById(
-                    "visitorEmail"
-                )
-                .value = "";
-
-
-            document
-                .getElementById(
-                    "visitorQuestion"
-                )
-                .value = "";
-
-
-            /*
-             * Reset button.
-             */
-            questionButton.disabled =
-                false;
-
-
-            questionButton.textContent =
-                "Send Question";
-
-        }
-    );
-
-}
-
-
-/* =========================================================
    STATUS MESSAGE
    ========================================================= */
-
 
 function showQuestionMessage(
     message,
@@ -871,10 +757,16 @@ function showQuestionMessage(
 
     if (isError) {
 
+        questionMessage.style.color =
+            "#ff4444";
+
         questionMessage.className =
             "question-error";
 
     } else {
+
+        questionMessage.style.color =
+            "#11ee77";
 
         questionMessage.className =
             "question-success";
@@ -885,27 +777,328 @@ function showQuestionMessage(
 
 
 /* =========================================================
+   RESET FORM
+   ========================================================= */
+
+function resetQuestionForm() {
+
+    if (visitorEmail) {
+
+        visitorEmail.value = "";
+
+    }
+
+
+    if (visitorQuestion) {
+
+        visitorQuestion.value = "";
+
+    }
+
+
+    if (websiteHoneypot) {
+
+        websiteHoneypot.value = "";
+
+    }
+
+
+    prepareQuestionForm();
+
+}
+
+
+/* =========================================================
+   QUESTION FORM SUBMISSION
+   ========================================================= */
+
+if (questionForm) {
+
+    /*
+     * Fill hidden fields immediately.
+     */
+    prepareQuestionForm();
+
+
+    questionForm.addEventListener(
+        "submit",
+        function(event) {
+
+            /*
+             * Read visible form values.
+             */
+            const email =
+                visitorEmail
+                    ? visitorEmail.value.trim()
+                    : "";
+
+
+            const question =
+                visitorQuestion
+                    ? visitorQuestion.value.trim()
+                    : "";
+
+
+            const honeypot =
+                websiteHoneypot
+                    ? websiteHoneypot.value.trim()
+                    : "";
+
+
+            /* =================================================
+               QUESTION VALIDATION
+               ================================================= */
+
+            if (!question) {
+
+                event.preventDefault();
+
+                showQuestionMessage(
+                    "Please enter your question.",
+                    true
+                );
+
+                if (visitorQuestion) {
+
+                    visitorQuestion.focus();
+
+                }
+
+                return;
+
+            }
+
+
+            /* =================================================
+               QUESTION LENGTH
+               ================================================= */
+
+            if (question.length > 2000) {
+
+                event.preventDefault();
+
+                showQuestionMessage(
+                    "Your question is too long. Please keep it under 2000 characters.",
+                    true
+                );
+
+                return;
+
+            }
+
+
+            /* =================================================
+               EMAIL VALIDATION
+               ================================================= */
+
+            if (
+                email &&
+                !isValidEmail(email)
+            ) {
+
+                event.preventDefault();
+
+                showQuestionMessage(
+                    "Please enter a valid email address.",
+                    true
+                );
+
+                if (visitorEmail) {
+
+                    visitorEmail.focus();
+
+                }
+
+                return;
+
+            }
+
+
+            /* =================================================
+               HONEYPOT
+               ================================================= */
+
+            if (honeypot) {
+
+                /*
+                 * Do not tell the bot exactly what happened.
+                 */
+                event.preventDefault();
+
+                showQuestionMessage(
+                    "Your question could not be submitted.",
+                    true
+                );
+
+                return;
+
+            }
+
+
+            /* =================================================
+               UPDATE HIDDEN VALUES
+               ================================================= */
+
+            prepareQuestionForm();
+
+
+            /* =================================================
+               DISABLE BUTTON
+               ================================================= */
+
+            if (questionButton) {
+
+                questionButton.disabled =
+                    true;
+
+                questionButton.style.opacity =
+                    "0.6";
+
+                questionButton.style.cursor =
+                    "not-allowed";
+
+                questionButton.textContent =
+                    "Sending...";
+
+            }
+
+
+            /* =================================================
+               STATUS
+               ================================================= */
+
+            showQuestionMessage(
+                "Sending your question...",
+                false
+            );
+
+
+            /*
+             * IMPORTANT:
+             *
+             * We intentionally DO NOT call:
+             *
+             * event.preventDefault();
+             *
+             * here.
+             *
+             * The browser will submit the form normally
+             * to the hidden iframe.
+             */
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   HIDDEN IFRAME RESPONSE
+   ========================================================= */
+
+/*
+ * When Google Apps Script responds, the response is loaded
+ * into the hidden iframe.
+ *
+ * We use this event to tell the visitor that the submission
+ * has completed.
+ */
+
+if (questionFrame) {
+
+    questionFrame.addEventListener(
+        "load",
+        function() {
+
+            /*
+             * Only handle this if the question button has
+             * been disabled because of an actual submission.
+             */
+            if (
+                !questionButton ||
+                !questionButton.disabled
+            ) {
+
+                return;
+
+            }
+
+
+            /*
+             * The Google Apps Script backend received
+             * the form request.
+             */
+            showQuestionMessage(
+                "Thank you! Your question has been submitted.",
+                false
+            );
+
+
+            /*
+             * Clear the visible fields.
+             */
+            resetQuestionForm();
+
+
+            /*
+             * Re-enable button.
+             */
+            questionButton.disabled =
+                false;
+
+
+            questionButton.style.opacity =
+                "1";
+
+
+            questionButton.style.cursor =
+                "pointer";
+
+
+            questionButton.textContent =
+                "Send Question";
+
+        }
+    );
+
+}
+
+
+/* =========================================================
    START PAGE TRACKING
    ========================================================= */
 
+function startWebsiteTracking() {
+
+    /*
+     * Give the page a moment to finish loading before
+     * sending the page-view request.
+     */
+    recordPageView();
+
+}
+
+
+/* =========================================================
+   PAGE LOAD
+   ========================================================= */
 
 if (
-    document.readyState ===
-    "loading"
+    document.readyState === "loading"
 ) {
 
     document.addEventListener(
         "DOMContentLoaded",
         function() {
 
-            recordPageView();
+            startWebsiteTracking();
 
         }
     );
 
 } else {
 
-    recordPageView();
+    startWebsiteTracking();
 
 }
 
