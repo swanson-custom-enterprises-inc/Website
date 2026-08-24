@@ -116,21 +116,731 @@ color:black;
 
       <p>As of 6:00 PM August 23, 2026 I have no idea what I am going to do with this website. My business is not really successful, which makes sence. Will probably shut it down. I can still use the domain though!
       <br><br> A few short things about me
-      <ul><li>Current job: County Parks & Recreation, Young Pros (another business I started), LivestreaM Manager at <a href="gpctopeka.com">Gathering Place Church (Topeka ,Kansas)</a> </li>
-        <li>Hobbies: Computer Collecting (and sometimes repair (more like destruction)), (very) casual gaming, and working</li>
+      <ul><li>Current job: County Parks & Recreation, Young Pros (another business I started), Livestream Manager at <a href="gpctopeka.com">Gathering Place Church (Topeka ,Kansas)</a> </li>
+        <li>Hobbies: Computer Collecting (and sometimes repair (more like destruction)), (very) casual gaming, web design, and working</li>
       <li>Career aspirations: Engineering (likely electrical, working with motherboard design and chip design)</li>
       <li>Religion: Christianity (Word of Faith, Un-altered word of God)</li>
       <li>Religious organization currently (I am) attending: <a href="gpctopeka.com">Gathering Place Church (Topeka ,Kansas)</a></li>
       <li>Political Affiliations: Republican Party</li>
+	<li>Current Goal in life: To become more outgoing</li>
+	<li>Favorite lesser known historic event: <a href="https://en.wikipedia.org/wiki/Great_Molasses_Flood">Great Molasses Flood of 1919</a></li>
+		
       </ul>
-    That is all for now. Version 1.0 Than's Website. 6:10 CDT 8-23-2026</p>
+    That is all for now. Version 1.0 Than's Website. 7:55 PM CDT 8-23-2026</p>
       
 <div class="button-container">
 
 <a href="mailto: swanson.custom.enterprises@gmail.com" class="btn">
 Contact Me at swanson.custom.enterprises@gmail.com
 </a>
+	<!-- =========================================================
+     WEBSITE QUESTION FORM
+     ========================================================= -->
 
+<section id="website-question-section" style="/* Add shadows to create the "card" effect */
+box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+transition: 0.3s;
+border-radius: 5px; /* Rounded corners */
+}
+
+/* On mouse-over, add a deeper shadow */
+card:hover {
+box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+container {
+padding: 2px 16px;
+}
+
+/* Add rounded corners to the top left and the top right corner of the image */
+img {
+border-radius: 5px 5px 0 0;
+}">
+
+    <h2>ASK THAN!</h2>
+
+    <p>
+        Have a question about anything? Send it to me and I'll get back to you. No AI just IBrain. If you send in a question that I like I might add it on the website!
+    </p>
+
+    <form id="websiteQuestionForm">
+
+        <!-- Optional email -->
+        <div>
+            <label for="visitorEmail">
+                Your Email <span>(optional)</span>
+            </label>
+
+            <input
+                type="email"
+                id="visitorEmail"
+                name="email"
+                autocomplete="email"
+                placeholder="you@example.com"
+								style="
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  border: 2px solid 11ee77;
+  border-radius: 8px;
+"
+            >
+        </div>
+
+
+        <!-- Question -->
+        <div>
+            <label for="visitorQuestion">
+                Your Question
+            </label>
+
+            <textarea
+                id="visitorQuestion"
+                name="question"
+                rows="1"
+                maxlength="2000"
+                required
+                placeholder="Type your question here..."
+				style="
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  border: 2px solid 11ee77;
+  border-radius: 8px;
+"
+            ></textarea>
+        </div>
+
+
+        <!--
+            Invisible honeypot field.
+
+            Real visitors should never see or fill this.
+            Basic automated spam bots may fill it.
+        -->
+        <div
+            aria-hidden="true"
+            style="
+                position:absolute;
+                left:-10000px;
+                top:auto;
+                width:1px;
+                height:1px;
+                overflow:hidden;
+            "
+        >
+            <label for="website">
+                Website
+            </label>
+
+            <input
+                type="text"
+                id="website"
+                name="website"
+                tabindex="-1"
+                autocomplete="off"
+            >
+        </div>
+
+
+        <button style=" background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            text-align: center;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        hover {
+            background-color: #45a049;
+        }"
+            type="submit"
+            id="questionSubmitButton"
+        >
+            Send Question
+        </button>
+
+
+        <!-- Status message -->
+        <div
+            id="questionFormMessage"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+    </form>
+
+</section>
+
+
+<script>
+/* =========================================================
+   CONFIGURATION
+   ========================================================= */
+
+
+/*
+ * REPLACE THIS WITH YOUR REAL GOOGLE APPS SCRIPT
+ * WEB APP /exec URL.
+ */
+const WEBSITE_BACKEND_URL =
+    "https://script.google.com/macros/s/AKfycbxo216J3VSs1XkCUSF_aCydDKwULIFx6A2A_wTv0OY0-r4mkkyhhFbSb2TBQeLxupEpKQ/exec";
+
+
+/* =========================================================
+   VISITOR SESSION
+   ========================================================= */
+
+
+/*
+ * Generate a unique visitor session ID.
+ *
+ * This is stored in sessionStorage, which means:
+ *
+ * - It persists while the visitor moves around your site.
+ * - It is cleared when the browser session ends.
+ * - We do not collect an IP address.
+ */
+function getVisitorSessionId() {
+
+    let sessionId =
+        sessionStorage.getItem(
+            "websiteVisitorSessionId"
+        );
+
+
+    if (!sessionId) {
+
+        /*
+         * crypto.randomUUID() is supported by
+         * modern browsers.
+         */
+        if (
+            window.crypto &&
+            crypto.randomUUID
+        ) {
+
+            sessionId =
+                crypto.randomUUID();
+
+        } else {
+
+            /*
+             * Fallback for older browsers.
+             */
+            sessionId =
+                "visitor-" +
+                Date.now() +
+                "-" +
+                Math.random()
+                    .toString(36)
+                    .substring(2);
+
+        }
+
+
+        sessionStorage.setItem(
+            "websiteVisitorSessionId",
+            sessionId
+        );
+
+    }
+
+
+    return sessionId;
+}
+
+
+/* =========================================================
+   PAGE INFORMATION
+   ========================================================= */
+
+
+/*
+ * Get the current page URL.
+ */
+function getCurrentPage() {
+
+    return window.location.href;
+}
+
+
+/*
+ * Get the referring page/site.
+ */
+function getReferrer() {
+
+    return document.referrer || "";
+}
+
+
+/*
+ * Get browser/device information.
+ */
+function getUserAgent() {
+
+    return navigator.userAgent || "";
+}
+
+
+/* =========================================================
+   SEND PAGE VIEW
+   ========================================================= */
+
+
+function recordPageView() {
+
+    /*
+     * Don't attempt to send anything if the URL
+     * hasn't been configured yet.
+     */
+    if (
+        !WEBSITE_BACKEND_URL ||
+        WEBSITE_BACKEND_URL ===
+        "https://script.google.com/macros/s/AKfycbxo216J3VSs1XkCUSF_aCydDKwULIFx6A2A_wTv0OY0-r4mkkyhhFbSb2TBQeLxupEpKQ/exec"
+    ) {
+
+        console.warn(
+            "Website backend URL has not been configured."
+        );
+
+        return;
+    }
+
+
+    const data = {
+
+        type: "pageview",
+
+        sessionId:
+            getVisitorSessionId(),
+
+        page:
+            getCurrentPage(),
+
+        referrer:
+            getReferrer(),
+
+        userAgent:
+            getUserAgent(),
+
+        website:
+            ""
+
+    };
+
+
+    /*
+     * sendBeacon is ideal for analytics/page tracking
+     * because the browser can continue sending the
+     * request even if the visitor leaves the page.
+     */
+    try {
+
+        if (
+            navigator.sendBeacon
+        ) {
+
+            const blob =
+                new Blob(
+                    [
+                        JSON.stringify(data)
+                    ],
+                    {
+                        type:
+                            "text/plain;charset=UTF-8"
+                    }
+                );
+
+
+            navigator.sendBeacon(
+                WEBSITE_BACKEND_URL,
+                blob
+            );
+
+
+            return;
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "sendBeacon failed.",
+            error
+        );
+
+    }
+
+
+    /*
+     * Fallback for browsers where sendBeacon
+     * isn't available.
+     */
+    fetch(
+        WEBSITE_BACKEND_URL,
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "text/plain;charset=UTF-8"
+            },
+
+            body:
+                JSON.stringify(data),
+
+            keepalive: true
+        }
+    ).catch(
+        function(error) {
+
+            console.warn(
+                "Page tracking failed.",
+                error
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   QUESTION FORM
+   ========================================================= */
+
+
+const questionForm =
+    document.getElementById(
+        "websiteQuestionForm"
+    );
+
+
+const questionButton =
+    document.getElementById(
+        "questionSubmitButton"
+    );
+
+
+const questionMessage =
+    document.getElementById(
+        "questionFormMessage"
+    );
+
+
+/*
+ * Make sure the form exists before adding
+ * the event listener.
+ */
+if (questionForm) {
+
+    questionForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            /*
+             * Prevent normal form submission.
+             */
+            event.preventDefault();
+
+
+            /*
+             * Prevent accidental double submission.
+             */
+            if (
+                questionButton.disabled
+            ) {
+
+                return;
+
+            }
+
+
+            const email =
+                document
+                    .getElementById(
+                        "visitorEmail"
+                    )
+                    .value
+                    .trim();
+
+
+            const question =
+                document
+                    .getElementById(
+                        "visitorQuestion"
+                    )
+                    .value
+                    .trim();
+
+
+            const honeypot =
+                document
+                    .getElementById(
+                        "website"
+                    )
+                    .value
+                    .trim();
+
+
+            /*
+             * Basic frontend validation.
+             */
+            if (!question) {
+
+                showQuestionMessage(
+                    "Please enter your question.",
+                    true
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * Email is optional.
+             *
+             * If they enter one, make sure it
+             * looks like an email address.
+             */
+            if (
+                email &&
+                !isValidEmail(email)
+            ) {
+
+                showQuestionMessage(
+                    "Please enter a valid email address.",
+                    true
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * Disable button while submitting.
+             */
+            questionButton.disabled = true;
+
+            questionButton.textContent =
+                "Sending...";
+
+
+            showQuestionMessage(
+                "Sending your question...",
+                false
+            );
+
+
+            /*
+             * Build the request.
+             */
+            const data = {
+
+                type: "question",
+
+                sessionId:
+                    getVisitorSessionId(),
+
+                page:
+                    getCurrentPage(),
+
+                referrer:
+                    getReferrer(),
+
+                userAgent:
+                    getUserAgent(),
+
+                email:
+                    email,
+
+                question:
+                    question,
+
+                website:
+                    honeypot
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        WEBSITE_BACKEND_URL,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "text/plain;charset=UTF-8"
+                            },
+
+                            body:
+                                JSON.stringify(data)
+                        }
+                    );
+
+
+                /*
+                 * Try to read Google's JSON response.
+                 */
+                let result;
+
+
+                try {
+
+                    result =
+                        await response.json();
+
+                } catch (jsonError) {
+
+                    result = {
+                        success:
+                            response.ok
+                    };
+
+                }
+
+
+                if (
+                    result.success
+                ) {
+
+                    /*
+                     * Clear the form.
+                     */
+                    questionForm.reset();
+
+
+                    showQuestionMessage(
+                        "Thank you! Your question has been submitted.",
+                        false
+                    );
+
+
+                } else {
+
+                    throw new Error(
+                        result.message ||
+                        "The question could not be submitted."
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Question submission error:",
+                    error
+                );
+
+
+                showQuestionMessage(
+                    "Sorry, there was a problem submitting your question. Please try again.",
+                    true
+                );
+
+
+            } finally {
+
+                /*
+                 * Re-enable button.
+                 */
+                questionButton.disabled =
+                    false;
+
+                questionButton.textContent =
+                    "Send Question";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FORM MESSAGE
+   ========================================================= */
+
+
+function showQuestionMessage(
+    message,
+    isError
+) {
+
+    if (!questionMessage) {
+        return;
+    }
+
+
+    questionMessage.textContent =
+        message;
+
+
+    /*
+     * These classes are optional.
+     *
+     * You can style them however you want:
+     *
+     * .question-success
+     * .question-error
+     */
+    questionMessage.className =
+        isError
+            ? "question-error"
+            : "question-success";
+
+}
+
+
+/* =========================================================
+   EMAIL VALIDATION
+   ========================================================= */
+
+
+function isValidEmail(email) {
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        .test(email);
+
+}
+
+
+/* =========================================================
+   START PAGE TRACKING
+   ========================================================= */
+
+
+/*
+ * Start tracking after the page has loaded.
+ */
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        recordPageView
+    );
+
+} else {
+
+    recordPageView();
+
+}
+</script>
 </div>
 
 	  
