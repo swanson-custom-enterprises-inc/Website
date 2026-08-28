@@ -1,0 +1,273 @@
+<!--permalink:doom-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doomsday Clock Editor</title>
+<style>
+*{box-sizing:border-box}
+:root{--panel:#151b24;--panel2:#0e141c;--text:#eef2f7;--muted:#9ca8b7;--line:#293241}
+body{margin:0;background:#090d12;color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+.app{display:grid;grid-template-columns:390px 1fr;min-height:100vh}
+.sidebar{background:var(--panel);padding:22px;overflow:auto;border-right:1px solid var(--line)}
+h1{font-size:22px;margin:0 0 4px}.sub{font-size:12px;color:var(--muted);margin-bottom:22px}
+.section{border-top:1px solid var(--line);padding-top:16px;margin-top:16px}.section:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.label{font-size:12px;color:var(--muted);display:block;margin:12px 0 6px}
+input[type=text],input[type=date],input[type=time]{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--text)}
+.toggle{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--panel2);padding:5px;border:1px solid var(--line);border-radius:9px}
+button{width:100%;padding:11px;border:0;border-radius:8px;margin-top:9px;background:#ff3b3b;color:#fff;font-weight:bold;cursor:pointer}
+.toggle button{margin:0;background:transparent;color:var(--muted);padding:9px 6px;font-size:12px}.toggle button.active{background:#ff3b3b;color:#fff}
+button.secondary{background:#293548}button.ghost{background:transparent;border:1px solid var(--line)}
+.colors{display:flex;gap:18px}.colorBox{flex:1;text-align:center;font-size:12px;color:var(--muted)}
+input[type=color]{appearance:none;-webkit-appearance:none;width:72px;height:72px;border-radius:50%;padding:0;border:4px solid #fff;background:none;display:block;margin:7px auto;cursor:pointer}
+input[type=color]::-webkit-color-swatch-wrapper{padding:0}input[type=color]::-webkit-color-swatch{border:0;border-radius:50%}input[type=color]::-moz-color-swatch{border:0;border-radius:50%}
+.upload{border:1px dashed #465365;border-radius:10px;padding:14px;text-align:center;background:var(--panel2)}
+.upload input{width:100%}.thumb{max-width:100%;max-height:130px;display:none;margin:12px auto 0;border-radius:8px}
+.presets{display:grid;grid-template-columns:1fr 1fr;gap:7px}.presets button{margin:0;font-size:12px}
+.status{font-size:12px;color:var(--muted);line-height:1.4;margin-top:9px}
+.previewArea{padding:18px;min-width:0}.previewFrame{height:calc(100vh - 36px);min-height:560px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#000}
+#preview{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.clock{width:min(1000px,94%);padding:42px 24px;text-align:center;border:4px solid #ff3b3b;border-radius:24px;background:rgba(0,0,0,.72);box-shadow:0 0 70px #ff3b3b}
+.clock h2{font-size:clamp(24px,4vw,46px);margin:0 0 18px}
+.count{font-size:clamp(34px,6vw,76px);font-weight:900;letter-spacing:1px;color:#ff3b3b;line-height:1.05}
+.count.calendar{font-size:clamp(20px,3vw,46px)}
+.unit{display:inline-block;margin:4px 7px;text-align:center;min-width:58px}.unit b{display:block}.unit small{font-size:10px;color:#aeb8c7}
+.until{margin-top:12px;color:#c5ccd5;font-size:14px}
+.boom{max-width:70%;max-height:280px;display:none;margin:28px auto 0;object-fit:contain}
+.boomNow{display:block!important;animation:boom .9s ease-out both}
+@keyframes boom{0%{opacity:0;transform:scale(.2);filter:brightness(1) drop-shadow(0 0 5px #fff)}55%{opacity:1;transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
+@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid var(--line)}.previewFrame{height:620px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+<h1>Doomsday Clock Editor</h1>
+<div class="sub">Create a countdown with precision milliseconds or a calendar-style display.</div>
+
+<div class="section">
+<label class="label">Clock Name</label>
+<input id="name" type="text" value="Doomsday Clock">
+<label class="label">End Date</label>
+<input id="date" type="date">
+<label class="label">End Time</label>
+<input id="time" type="time" step="1">
+</div>
+
+<div class="section">
+<label class="label">Countdown Display</label>
+<div class="toggle">
+<button id="precisionMode" class="active" type="button">HH:MM:SS.mmm</button>
+<button id="calendarMode" type="button">Y / M / D + Time</button>
+</div>
+</div>
+
+<div class="section">
+<label class="label">Explosion Image</label>
+<div class="upload">
+<input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+<img id="thumb" class="thumb" alt="Explosion preview">
+<div id="imageStatus" class="status">The image stays hidden during the countdown and appears only at zero.</div>
+</div>
+</div>
+
+<div class="section">
+<label class="label">Theme Colors</label>
+<div class="colors">
+<div class="colorBox">Background<input id="bg" type="color" value="#090d12"></div>
+<div class="colorBox">Accent<input id="accent" type="color" value="#ff3b3b"></div>
+</div>
+</div>
+
+<div class="section">
+<label class="label">Theme Presets</label>
+<div class="presets">
+<button data-bg="#090d12" data-accent="#ff3b3b" type="button">Nuclear Red</button>
+<button data-bg="#08120b" data-accent="#58ff58" type="button">Toxic Green</button>
+<button data-bg="#07111c" data-accent="#38a8ff" type="button">Arctic Blue</button>
+<button data-bg="#12091a" data-accent="#d35cff" type="button">Warning Purple</button>
+</div>
+</div>
+
+<div class="section">
+<button id="reset" class="secondary" type="button">Reset Editor</button>
+<button id="export" type="button">Export HTML</button>
+<button id="copy" class="ghost" type="button">Copy Embed HTML</button>
+<div id="status" class="status"></div>
+</div>
+</aside>
+
+<main class="previewArea">
+<div class="previewFrame"><div id="preview"></div></div>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+var mode="precision";
+var imageData="";
+var timer=null;
+
+function $(id){return document.getElementById(id)}
+function pad(n){return n<10?"0"+n:""+n}
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function getConfig(){
+  return {
+    name:$("name").value.trim()||"Doomsday Clock",
+    date:$("date").value,
+    time:$("time").value||"00:00:00",
+    bg:$("bg").value,
+    accent:$("accent").value,
+    image:imageData
+  };
+}
+function calendarDiff(target,now){
+  var t=new Date(target),n=new Date(now),cur=new Date(n);
+  var years=t.getFullYear()-cur.getFullYear();
+  if(years>0){
+    var ycur=new Date(cur);ycur.setFullYear(cur.getFullYear()+years);
+    if(ycur>t){years--;ycur=new Date(cur);ycur.setFullYear(cur.getFullYear()+years)}
+    cur=ycur;
+  }else years=0;
+  var months=t.getMonth()-cur.getMonth()+12*(t.getFullYear()-cur.getFullYear());
+  if(months>0){
+    var mcur=new Date(cur);mcur.setMonth(cur.getMonth()+months);
+    if(mcur>t){months--;mcur=new Date(cur);mcur.setMonth(cur.getMonth()+months)}
+    cur=mcur;
+  }else months=0;
+  var x=t-cur;
+  var days=Math.floor(x/86400000);x-=days*86400000;
+  var hours=Math.floor(x/3600000);x-=hours*3600000;
+  var minutes=Math.floor(x/60000);x-=minutes*60000;
+  var seconds=Math.floor(x/1000);x-=seconds*1000;
+  return [years,months,days,hours,minutes,seconds,x];
+}
+function calendarHTML(d){
+  return '<span class="unit"><b>'+d[0]+'</b><small>YEARS</small></span>'+
+  '<span class="unit"><b>'+d[1]+'</b><small>MONTHS</small></span>'+
+  '<span class="unit"><b>'+d[2]+'</b><small>DAYS</small></span>'+
+  '<span class="unit"><b>'+pad(d[3])+'</b><small>HOURS</small></span>'+
+  '<span class="unit"><b>'+pad(d[4])+'</b><small>MINUTES</small></span>'+
+  '<span class="unit"><b>'+pad(d[5])+'</b><small>SECONDS</small></span>'+
+  '<span class="unit"><b>'+String(d[6]).padStart(3,"0")+'</b><small>MILLISECONDS</small></span>';
+}
+function render(){
+  var c=getConfig();
+  var p=$("preview");
+  var exploded=false;
+  p.style.background=c.bg;
+  p.innerHTML='<div class="clock" style="border-color:'+c.accent+';box-shadow:0 0 70px '+c.accent+'">'+
+    '<h2>'+esc(c.name)+'</h2>'+
+    '<div id="liveCount" class="count '+(mode==="calendar"?"calendar":"")+'" style="color:'+c.accent+'">'+
+    (mode==="calendar"?"0 YEARS":"00:00:00.000")+'</div>'+
+    '<div id="until" class="until">TIME UNTIL DOOMSDAY</div>'+
+    (c.image?'<img id="boom" class="boom" src="'+c.image+'" alt="Explosion" style="filter:drop-shadow(0 0 35px '+c.accent+')">':"")+"</div>";
+  if(timer)clearInterval(timer);
+  function tick(){
+    var target=new Date(c.date+"T"+c.time).getTime();
+    var diff=target-Date.now();
+    var e=$("liveCount");
+    if(!e)return;
+    if(!c.date||isNaN(target)){e.textContent="SET DATE & TIME";return}
+    if(diff<=0){
+      if(mode==="calendar")e.innerHTML=calendarHTML([0,0,0,0,0,0,0]);
+      else e.textContent="00:00:00.000";
+      $("until").textContent="DOOMSDAY HAS ARRIVED";
+      if(!exploded){exploded=true;var b=$("boom");if(b)b.className="boom boomNow";}
+      return;
+    }
+    $("until").textContent="TIME UNTIL DOOMSDAY";
+    if(mode==="calendar"){
+      e.innerHTML=calendarHTML(calendarDiff(target,Date.now()));
+    }else{
+      var ms=diff%1000;
+      var sec=Math.floor(diff/1000);
+      var s=sec%60;sec=Math.floor(sec/60);
+      var m=sec%60;var h=Math.floor(sec/60);
+      e.textContent=pad(h)+":"+pad(m)+":"+pad(s)+"."+String(ms).padStart(3,"0");
+    }
+  }
+  tick();
+  timer=setInterval(tick,25);
+}
+function buildExportHTML(){
+  var c=getConfig();
+  var exportedMode=mode;
+  var style=""+
+  "html,body{margin:0;min-height:100%;background:"+c.bg+"}"+
+  "body{min-height:100vh;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Arial,Helvetica,sans-serif}"+
+  ".clock{width:min(1000px,94%);padding:42px 24px;text-align:center;border:4px solid "+c.accent+";border-radius:24px;background:rgba(0,0,0,.72);box-shadow:0 0 70px "+c.accent+"}"+
+  ".clock h1{font-size:clamp(24px,4vw,46px);margin:0 0 18px}"+
+  ".count{font-size:clamp(34px,6vw,76px);font-weight:900;letter-spacing:1px;color:"+c.accent+";line-height:1.05}"+
+  ".calendar{font-size:clamp(20px,3vw,46px)}"+
+  ".unit{display:inline-block;margin:4px 7px;text-align:center;min-width:58px}.unit b{display:block}.unit small{font-size:10px;color:#aeb8c7}"+
+  ".until{margin-top:12px;color:#c5ccd5;font-size:14px}"+
+  ".boom{max-width:70%;max-height:280px;display:none;margin:28px auto 0;object-fit:contain}"+
+  ".boomNow{display:block!important;animation:boom .9s ease-out both}"+
+  "@keyframes boom{0%{opacity:0;transform:scale(.2);filter:brightness(1) drop-shadow(0 0 5px #fff)}55%{opacity:1;transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}";
+
+  var img=c.image?'<img id="boom" class="boom" src="'+c.image+'" alt="Explosion">':"";
+  var js="";
+  js+='var target=new Date("'+c.date+'T'+c.time+'").getTime();';
+  js+='var mode="'+exportedMode+'";';
+  js+='var done=false;';
+  js+='function p(n){return n<10?"0"+n:""+n}';
+  js+='function cd(t,n){';
+  js+='var cur=new Date(n),y=t.getFullYear()-cur.getFullYear();';
+  js+='if(y>0){var a=new Date(cur);a.setFullYear(cur.getFullYear()+y);if(a>t){y--;a=new Date(cur);a.setFullYear(cur.getFullYear()+y)}cur=a}else y=0;';
+  js+='var m=t.getMonth()-cur.getMonth()+12*(t.getFullYear()-cur.getFullYear());';
+  js+='if(m>0){var b=new Date(cur);b.setMonth(cur.getMonth()+m);if(b>t){m--;b=new Date(cur);b.setMonth(cur.getMonth()+m)}cur=b}else m=0;';
+  js+='var x=t-cur,d=Math.floor(x/86400000);x-=d*86400000;';
+  js+='var h=Math.floor(x/3600000);x-=h*3600000;var mi=Math.floor(x/60000);x-=mi*60000;var s=Math.floor(x/1000);x-=s*1000;';
+  js+='return[y,m,d,h,mi,s,x]}';
+  js+='function ch(d){return "<span class=\\"unit\\"><b>"+d[0]+"</b><small>YEARS</small></span>"+"<span class=\\"unit\\"><b>"+d[1]+"</b><small>MONTHS</small></span>"+"<span class=\\"unit\\"><b>"+d[2]+"</b><small>DAYS</small></span>"+"<span class=\\"unit\\"><b>"+p(d[3])+"</b><small>HOURS</small></span>"+"<span class=\\"unit\\"><b>"+p(d[4])+"</b><small>MINUTES</small></span>"+"<span class=\\"unit\\"><b>"+p(d[5])+"</b><small>SECONDS</small></span>"+"<span class=\\"unit\\"><b>"+String(d[6]).padStart(3,\"0\")+"</b><small>MILLISECONDS</small></span>"}';
+  js+='function tick(){';
+  js+='var d=target-Date.now(),e=document.getElementById("count"),u=document.getElementById("until");';
+  js+='if(d<=0){';
+  js+='if(mode==="calendar"){e.innerHTML=ch([0,0,0,0,0,0,0])}else{e.textContent="00:00:00.000"}';
+  js+='u.textContent="DOOMSDAY HAS ARRIVED";';
+  js+='if(!done){done=true;var b=document.getElementById("boom");if(b)b.className="boom boomNow"}';
+  js+='return}';
+  js+='u.textContent="TIME UNTIL DOOMSDAY";';
+  js+='if(mode==="calendar"){e.innerHTML=ch(cd(new Date(target),new Date()))}else{';
+  js+='var ms=d%1000,s=Math.floor(d/1000),sec=s%60;s=Math.floor(s/60);var mi=s%60,h=Math.floor(s/60);';
+  js+='e.textContent=p(h)+":"+p(mi)+":"+p(sec)+"."+String(ms).padStart(3,"0")';
+  js+='}';
+  js+='}tick();setInterval(tick,25);';
+
+  return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>'+esc(c.name)+'</title><style>'+style+'</style></head><body><div class="clock"><h1>'+esc(c.name)+'</h1><div id="count" class="count '+(exportedMode==="calendar"?"calendar":"")+'">--</div><div id="until" class="until">TIME UNTIL DOOMSDAY</div>'+img+'</div><script>'+js+'<\\/script></body></html>';
+}
+function exportClock(){
+  var html=buildExportHTML();
+  var blob=new Blob([html],{type:"text/html;charset=utf-8"});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");
+  a.href=url;a.download="doomsday-clock.html";a.style.display="none";
+  document.body.appendChild(a);a.click();
+  setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url)},1000);
+  $("status").textContent="Exported doomsday-clock.html";
+}
+$("imageFile").addEventListener("change",function(){
+  var f=this.files[0];if(!f)return;
+  if(f.size>10*1024*1024){$("imageStatus").textContent="Maximum image size is 10 MB.";this.value="";return}
+  var r=new FileReader();
+  r.onload=function(e){imageData=e.target.result;$("thumb").src=imageData;$("thumb").style.display="block";$("imageStatus").textContent="Image loaded. It appears only when the countdown reaches zero.";render()};
+  r.onerror=function(){$("imageStatus").textContent="Could not read this image."};
+  r.readAsDataURL(f);
+});
+["name","date","time","bg","accent"].forEach(function(id){$(id).addEventListener("input",render)});
+$("precisionMode").addEventListener("click",function(){mode="precision";this.className="active";$("calendarMode").className="";render()});
+$("calendarMode").addEventListener("click",function(){mode="calendar";this.className="active";$("precisionMode").className="";render()});
+document.querySelectorAll(".presets button").forEach(function(b){b.addEventListener("click",function(){$("bg").value=this.getAttribute("data-bg");$("accent").value=this.getAttribute("data-accent");render()})});
+$("export").addEventListener("click",exportClock);
+$("copy").addEventListener("click",function(){var html=buildExportHTML();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(html).then(function(){$("status").textContent="HTML copied to clipboard"},function(){$("status").textContent="Clipboard blocked; use Export HTML"})}else{$("status").textContent="Clipboard unavailable; use Export HTML"}});
+$("reset").addEventListener("click",function(){var n=new Date();$("name").value="Doomsday Clock";$("date").valueAsDate=n;$("time").value=pad(n.getHours())+":"+pad(n.getMinutes())+":"+pad(n.getSeconds());$("bg").value="#090d12";$("accent").value="#ff3b3b";$("imageFile").value="";imageData="";$("thumb").style.display="none";mode="precision";$("precisionMode").className="active";$("calendarMode").className="";$("imageStatus").textContent="The image stays hidden during the countdown and appears only at zero.";render()});
+var n=new Date();$("date").valueAsDate=n;$("time").value=pad(n.getHours())+":"+pad(n.getMinutes())+":"+pad(n.getSeconds());render();
+})();
+</script>
+</body>
+</html>
