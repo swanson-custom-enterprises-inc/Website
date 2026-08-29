@@ -1,0 +1,6910 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>SCE ONE SOUND 1.0</title>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<style>
+
+/* ============================================================
+   GLOBAL
+   ============================================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #181818;
+
+    color: #ffffff;
+
+    min-height: 100vh;
+}
+
+
+/* ============================================================
+   STARTUP SCREEN
+   ============================================================ */
+
+#startupScreen {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    background: #000000;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+#startupScreen.hidden {
+    display: none;
+}
+
+.startup-content {
+    width: min(90vw, 900px);
+
+    max-height: 90vh;
+
+    padding: 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    gap: 20px;
+}
+
+.startup-image-placeholder {
+    width: min(75vw, 700px);
+
+    aspect-ratio: 16 / 9;
+
+    background: #151515;
+
+    border: 2px dashed #383838;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #555555;
+
+    font-size: 16px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.08em;
+}
+
+.startup-image {
+    width: min(75vw, 700px);
+
+    max-height: 55vh;
+
+    object-fit: contain;
+
+    display: none;
+}
+
+.startup-image.visible {
+    display: block;
+}
+
+.startup-title {
+    font-size: 30px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.04em;
+}
+
+.startup-message {
+    min-height: 20px;
+
+    color: #777777;
+
+    font-size: 13px;
+}
+
+
+/*
+    YOUR REQUESTED SPINNER
+*/
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(124,111,255,0.2);
+  border-top-color: #004aad;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.startup-start-button {
+    display: none;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-weight: 800;
+
+    font-size: 15px;
+
+    padding: 12px 22px;
+
+    cursor: pointer;
+}
+
+.startup-start-button:hover {
+    background: #1d4ed8;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+header {
+    background: #222222;
+
+    border-bottom:
+        1px solid #3a3a3a;
+
+    padding:
+        12px 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+}
+
+.title-area {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+.title-area h1 {
+    margin: 0;
+
+    font-size: 21px;
+
+    font-weight: 800;
+}
+
+.version {
+    font-size: 11px;
+
+    color: #999999;
+
+    background: #303030;
+
+    padding:
+        4px 7px;
+
+    border-radius: 5px;
+}
+
+
+/* ============================================================
+   SAVE STATUS
+   ============================================================ */
+
+.save-status {
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing:
+        0.03em;
+
+    white-space: nowrap;
+}
+
+.save-status.unsaved {
+    color: #ff4545;
+}
+
+.save-status.saved {
+    color: #39d56f;
+}
+
+
+/* ============================================================
+   TOOLBAR
+   ============================================================ */
+
+.toolbar {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+
+    border-radius: 6px;
+
+    padding:
+        9px 13px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    color: #ffffff;
+
+    background: #3b3b3b;
+
+    transition:
+        background 0.15s ease,
+        transform 0.05s ease,
+        opacity 0.15s ease;
+}
+
+button:hover {
+    background: #505050;
+}
+
+button:active {
+    transform:
+        translateY(1px);
+}
+
+button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.4;
+}
+
+.mode-button {
+    background: #444444;
+}
+
+.mode-button.active {
+    background: #2563eb;
+}
+
+.hints-button {
+    background: #555555;
+}
+
+.new-button {
+    background: #444444;
+}
+
+.open-button {
+    background: #6d28d9;
+}
+
+.open-button:hover {
+    background: #5b21b6;
+}
+
+.add-button {
+    background: #2563eb;
+}
+
+.undo-button {
+    background: #555555;
+}
+
+.save-button {
+    background: #15803d;
+}
+
+.save-button:hover {
+    background: #166534;
+}
+
+
+/* ============================================================
+   MAIN
+   ============================================================ */
+
+main {
+    width: 100%;
+
+    max-width: 1280px;
+
+    margin: 0 auto;
+
+    padding: 18px;
+}
+
+
+/* ============================================================
+   PROJECT BAR
+   ============================================================ */
+
+.project-bar {
+    background: #222222;
+
+    border:
+        1px solid #333333;
+
+    border-radius: 8px;
+
+    padding:
+        12px 14px;
+
+    margin-bottom: 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    flex-wrap: wrap;
+}
+
+.project-bar label {
+    color: #999999;
+
+    font-size: 13px;
+}
+
+#projectName {
+    flex: 1;
+
+    min-width: 160px;
+
+    padding:
+        9px 11px;
+
+    border-radius: 5px;
+
+    border:
+        1px solid #444444;
+
+    background: #151515;
+
+    color: #ffffff;
+
+    font-size: 14px;
+}
+
+#projectName:focus {
+    outline: none;
+
+    border-color:
+        #2563eb;
+}
+
+
+/* ============================================================
+   MODE VISIBILITY
+   ============================================================ */
+
+.mode {
+    display: none;
+}
+
+.mode.active {
+    display: block;
+}
+
+
+/* ============================================================
+   EDIT MODE
+   ============================================================ */
+
+.edit-mode-content {
+    display: block;
+}
+
+.edit-mode-label {
+    margin-bottom: 12px;
+
+    color: #aaaaaa;
+
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   CUE LIST
+   ============================================================ */
+
+.cue-list {
+    background: #222222;
+
+    border:
+        1px solid #333333;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+}
+
+.cue-header {
+    display: grid;
+
+    grid-template-columns:
+        55px
+        1fr
+        180px
+        90px
+        160px;
+
+    gap: 10px;
+
+    padding:
+        11px 13px;
+
+    background: #2b2b2b;
+
+    color: #999999;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+.cue-container {
+    min-height: 120px;
+}
+
+.empty-state {
+    min-height: 220px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    color: #777777;
+
+    padding: 30px;
+
+    gap: 8px;
+}
+
+
+/* ============================================================
+   CUE
+   ============================================================ */
+
+.cue {
+    display: grid;
+
+    grid-template-columns:
+        55px
+        1fr
+        180px
+        90px
+        160px;
+
+    gap: 10px;
+
+    align-items: center;
+
+    padding:
+        9px 13px;
+
+    border-top:
+        1px solid #333333;
+
+    background: #242424;
+
+    border-left:
+        5px solid transparent;
+
+    transition:
+        background 0.12s ease,
+        opacity 0.12s ease,
+        border-color 0.12s ease;
+}
+
+.cue:hover {
+    background: #2b2b2b;
+}
+
+.cue.selected {
+    background: #303030;
+}
+
+.cue.playing {
+    background: #352d20;
+}
+
+.cue.selected.playing {
+    background: #3b3222;
+}
+
+.cue.dragging {
+    opacity: 0.4;
+}
+
+.cue.drag-over {
+    border-top:
+        2px solid #2563eb;
+}
+
+
+/* ============================================================
+   COLORS
+   ============================================================ */
+
+.color-none {
+    border-left-color:
+        #555555;
+}
+
+.color-blue {
+    border-left-color:
+        #2563eb;
+}
+
+.color-green {
+    border-left-color:
+        #22c55e;
+}
+
+.color-yellow {
+    border-left-color:
+        #eab308;
+}
+
+.color-orange {
+    border-left-color:
+        #f97316;
+}
+
+.color-red {
+    border-left-color:
+        #ef4444;
+}
+
+.color-purple {
+    border-left-color:
+        #a855f7;
+}
+
+.color-cyan {
+    border-left-color:
+        #06b6d4;
+}
+
+
+/* ============================================================
+   EDIT CONTROLS
+   ============================================================ */
+
+.cue-number {
+    color: #8f8f8f;
+
+    font-weight: 800;
+
+    text-align: center;
+
+    cursor: grab;
+
+    user-select: none;
+}
+
+.cue-name-input {
+    width: 100%;
+
+    border:
+        1px solid transparent;
+
+    background:
+        transparent;
+
+    color:
+        #ffffff;
+
+    padding:
+        8px 9px;
+
+    border-radius:
+        5px;
+
+    font-size:
+        14px;
+}
+
+.cue-name-input:hover {
+    border-color:
+        #444444;
+}
+
+.cue-name-input:focus {
+    outline: none;
+
+    border-color:
+        #2563eb;
+
+    background:
+        #171717;
+}
+
+.color-select {
+    width: 100%;
+
+    padding:
+        6px 7px;
+
+    background:
+        #171717;
+
+    color:
+        #ffffff;
+
+    border:
+        1px solid #444444;
+
+    border-radius:
+        4px;
+
+    font-size:
+        12px;
+}
+
+.color-select:focus {
+    outline: none;
+
+    border-color:
+        #2563eb;
+}
+
+.file-name {
+    color:
+        #999999;
+
+    font-size:
+        12px;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+.duration {
+    color:
+        #aaaaaa;
+
+    font-size:
+        12px;
+
+    text-align:
+        center;
+}
+
+.cue-actions {
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+
+    gap:
+        5px;
+}
+
+.small-button {
+    padding:
+        7px 9px;
+
+    font-size:
+        11px;
+}
+
+.play-button {
+    background:
+        #2563eb;
+}
+
+.stop-cue-button {
+    background:
+        #b45309;
+}
+
+.delete-button {
+    background:
+        #3b2020;
+
+    color:
+        #ff9999;
+}
+
+.delete-button:hover {
+    background:
+        #5c2525;
+}
+
+
+/* ============================================================
+   SHOW MODE
+   ============================================================ */
+
+#showMode.active {
+    display: block;
+}
+
+.show-mode-content {
+    width: 100%;
+}
+
+.show-grid {
+    display: grid;
+
+    /*
+        EXACT ORDER:
+        NEXT | CURRENT | PREVIOUS
+    */
+
+    grid-template-columns:
+        minmax(180px, 0.8fr)
+        minmax(350px, 1.6fr)
+        minmax(180px, 0.8fr);
+
+    gap: 12px;
+
+    width: 100%;
+}
+
+
+/* ============================================================
+   NEXT / PREVIOUS
+   ============================================================ */
+
+.show-context {
+    min-height: 420px;
+
+    background:
+        #202020;
+
+    border:
+        1px solid #363636;
+
+    border-radius:
+        10px;
+
+    padding:
+        20px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    overflow:
+        hidden;
+}
+
+.next-context {
+    text-align:
+        left;
+}
+
+.previous-context {
+    text-align:
+        right;
+}
+
+.show-context-label {
+    color:
+        #777777;
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.12em;
+
+    text-transform:
+        uppercase;
+
+    margin-bottom:
+        12px;
+}
+
+.show-context-number {
+    color:
+        #777777;
+
+    font-size:
+        14px;
+
+    margin-bottom:
+        5px;
+}
+
+.show-context-name {
+    color:
+        #c9c9c9;
+
+    font-size:
+        22px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.25;
+
+    overflow:
+        hidden;
+
+    display:
+        -webkit-box;
+
+    -webkit-line-clamp:
+        4;
+
+    -webkit-box-orient:
+        vertical;
+}
+
+.show-context-file {
+    color:
+        #666666;
+
+    font-size:
+        12px;
+
+    margin-top:
+        12px;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+/* ============================================================
+   CURRENT CUE
+   ============================================================ */
+
+.current-show {
+    min-height:
+        420px;
+
+    background:
+        #252525;
+
+    border:
+        2px solid #2563eb;
+
+    border-radius:
+        10px;
+
+    padding:
+        22px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        space-between;
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    box-shadow:
+        0 12px 35px
+        rgba(0, 0, 0, 0.25);
+}
+
+.current-show.playing {
+    border-color:
+        #ef4444;
+}
+
+.current-color-strip {
+    position:
+        absolute;
+
+    left:
+        0;
+
+    top:
+        0;
+
+    bottom:
+        0;
+
+    width:
+        7px;
+}
+
+.current-info {
+    padding-left:
+        9px;
+
+    min-width:
+        0;
+}
+
+.current-label {
+    color:
+        #6ea8ff;
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.12em;
+
+    text-transform:
+        uppercase;
+
+    margin-bottom:
+        10px;
+}
+
+.current-show.playing
+.current-label {
+    color:
+        #ef4444;
+}
+
+.current-number {
+    color:
+        #999999;
+
+    font-size:
+        16px;
+
+    margin-bottom:
+        5px;
+}
+
+.current-name {
+    color:
+        #ffffff;
+
+    font-size:
+        clamp(
+            28px,
+            4vw,
+            48px
+        );
+
+    font-weight:
+        900;
+
+    line-height:
+        1.1;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+}
+
+.current-file {
+    color:
+        #777777;
+
+    font-size:
+        13px;
+
+    margin-top:
+        11px;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+/* ============================================================
+   GO / STOP
+   ============================================================ */
+
+.go-button {
+    width:
+        100%;
+
+    min-height:
+        155px;
+
+    border-radius:
+        10px;
+
+    background:
+        #15803d;
+
+    border:
+        3px solid #22c55e;
+
+    color:
+        #ffffff;
+
+    font-size:
+        clamp(
+            42px,
+            7vw,
+            76px
+        );
+
+    font-weight:
+        1000;
+
+    letter-spacing:
+        0.08em;
+
+    user-select:
+        none;
+
+    box-shadow:
+        inset 0 -7px 0
+        rgba(0, 0, 0, 0.18),
+
+        0 6px 20px
+        rgba(0, 0, 0, 0.3);
+}
+
+.go-button:hover {
+    background:
+        #16a34a;
+}
+
+.go-button:active {
+    transform:
+        translateY(4px);
+}
+
+.go-button.playing {
+    background:
+        #b91c1c;
+
+    border-color:
+        #ef4444;
+}
+
+.go-button.playing:hover {
+    background:
+        #dc2626;
+}
+
+.go-button:disabled {
+    background:
+        #333333;
+
+    border-color:
+        #444444;
+
+    color:
+        #666666;
+
+    box-shadow:
+        none;
+}
+
+
+/* ============================================================
+   AUTO ADVANCE
+   ============================================================ */
+
+.show-controls {
+    margin-top:
+        12px;
+
+    padding:
+        12px 15px;
+
+    background:
+        #222222;
+
+    border:
+        1px solid #333333;
+
+    border-radius:
+        7px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        flex-start;
+}
+
+.auto-advance-control {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    color:
+        #aaaaaa;
+
+    font-size:
+        13px;
+
+    cursor:
+        pointer;
+
+    user-select:
+        none;
+}
+
+.auto-advance-control input {
+    width:
+        17px;
+
+    height:
+        17px;
+
+    cursor:
+        pointer;
+}
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.status {
+    margin-top:
+        12px;
+
+    background:
+        #222222;
+
+    border:
+        1px solid #333333;
+
+    border-radius:
+        7px;
+
+    padding:
+        10px 13px;
+
+    color:
+        #8f8f8f;
+
+    font-size:
+        12px;
+
+    min-height:
+        38px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+}
+
+
+/* ============================================================
+   KEYBOARD SHORTCUTS
+   ============================================================ */
+
+.shortcut-bar {
+    margin-top:
+        10px;
+
+    color:
+        #777777;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.5;
+}
+
+.key {
+    display:
+        inline-block;
+
+    padding:
+        2px 6px;
+
+    margin:
+        0 2px;
+
+    background:
+        #2b2b2b;
+
+    border:
+        1px solid #444444;
+
+    border-radius:
+        4px;
+
+    color:
+        #aaaaaa;
+
+    font-size:
+        11px;
+}
+
+
+/* ============================================================
+   HINTS MODAL
+   ============================================================ */
+
+.modal-overlay {
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    background:
+        rgba(0, 0, 0, 0.76);
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        18px;
+
+    z-index:
+        3000;
+}
+
+.modal-overlay.hidden {
+    display:
+        none;
+}
+
+.modal {
+    width:
+        100%;
+
+    max-width:
+        620px;
+
+    max-height:
+        min(78vh, 650px);
+
+    background:
+        #242424;
+
+    border:
+        1px solid #444444;
+
+    border-radius:
+        10px;
+
+    box-shadow:
+        0 25px 80px
+        rgba(0, 0, 0, 0.6);
+
+    overflow:
+        hidden;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+}
+
+.modal-header {
+    flex:
+        0 0 auto;
+
+    padding:
+        14px 18px;
+
+    border-bottom:
+        1px solid #3b3b3b;
+
+    background:
+        #2b2b2b;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+}
+
+.modal-header h2 {
+    margin:
+        0;
+
+    font-size:
+        18px;
+}
+
+.modal-close {
+    background:
+        transparent;
+
+    color:
+        #999999;
+
+    font-size:
+        24px;
+
+    line-height:
+        1;
+
+    padding:
+        4px 8px;
+}
+
+.modal-close:hover {
+    background:
+        #3b3b3b;
+}
+
+.modal-body {
+    flex:
+        1 1 auto;
+
+    min-height:
+        0;
+
+    overflow-y:
+        auto;
+
+    padding:
+        16px 18px;
+
+    color:
+        #cccccc;
+
+    font-size:
+        13px;
+
+    line-height:
+        1.55;
+}
+
+.hints-section {
+    margin-bottom:
+        16px;
+}
+
+.hints-section:last-child {
+    margin-bottom:
+        0;
+}
+
+.hints-section h3 {
+    margin:
+        0 0 6px;
+
+    color:
+        #ffffff;
+
+    font-size:
+        13px;
+}
+
+.shortcut-grid {
+    display:
+        grid;
+
+    grid-template-columns:
+        auto 1fr;
+
+    gap:
+        5px 11px;
+}
+
+.shortcut-grid .key-label {
+    color:
+        #eeeeee;
+
+    font-weight:
+        700;
+}
+
+.shortcut-grid .key-action {
+    color:
+        #999999;
+}
+
+.modal-footer {
+    flex:
+        0 0 auto;
+
+    padding:
+        12px 18px;
+
+    border-top:
+        1px solid #3b3b3b;
+
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+}
+
+.close-hints-button {
+    background:
+        #2563eb;
+}
+
+
+/* ============================================================
+   UNSAVED MODAL
+   ============================================================ */
+
+.unsaved-modal {
+    max-width:
+        500px;
+}
+
+.modal-actions {
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+
+    gap:
+        8px;
+
+    flex-wrap:
+        wrap;
+}
+
+.modal-cancel {
+    background:
+        #444444;
+}
+
+.modal-ignore {
+    background:
+        #991b1b;
+}
+
+.modal-ignore:hover {
+    background:
+        #7f1d1d;
+}
+
+.modal-save {
+    background:
+        #15803d;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 950px) {
+
+    .show-grid {
+        grid-template-columns:
+            minmax(150px, 0.75fr)
+            minmax(300px, 1.5fr)
+            minmax(150px, 0.75fr);
+    }
+
+    .show-context,
+    .current-show {
+        min-height:
+            350px;
+    }
+
+    .cue-header,
+    .cue {
+        grid-template-columns:
+            50px
+            1fr
+            160px
+            75px
+            140px;
+    }
+}
+
+
+@media (max-width: 750px) {
+
+    header {
+        align-items:
+            flex-start;
+    }
+
+    .toolbar {
+        width:
+            100%;
+    }
+
+    .show-grid {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .current-show {
+        grid-column:
+            1 / -1;
+
+        grid-row:
+            1;
+    }
+
+    .next-context {
+        grid-column:
+            1;
+
+        grid-row:
+            2;
+    }
+
+    .previous-context {
+        grid-column:
+            2;
+
+        grid-row:
+            2;
+    }
+
+    .cue-header {
+        display:
+            none;
+    }
+
+    .cue {
+        grid-template-columns:
+            45px
+            1fr;
+    }
+
+    .file-name {
+        grid-column:
+            2;
+    }
+
+    .duration {
+        display:
+            none;
+    }
+
+    .cue-actions {
+        grid-column:
+            2;
+
+        justify-content:
+            flex-start;
+    }
+}
+
+
+@media (max-width: 520px) {
+
+    main {
+        padding:
+            10px;
+    }
+
+    .title-area {
+        width:
+            100%;
+    }
+
+    .save-status {
+        width:
+            100%;
+
+        white-space:
+            normal;
+    }
+
+    .toolbar {
+        gap:
+            5px;
+    }
+
+    .toolbar button {
+        flex:
+            1 1 auto;
+    }
+
+    .show-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .current-show,
+    .next-context,
+    .previous-context {
+        grid-column:
+            1;
+
+        grid-row:
+            auto;
+    }
+
+    .current-show {
+        min-height:
+            360px;
+    }
+
+    .show-context {
+        min-height:
+            165px;
+    }
+
+    .show-context.previous-context {
+        text-align:
+            left;
+    }
+
+    .go-button {
+        min-height:
+            125px;
+    }
+
+    .project-bar {
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+    }
+
+    .project-bar label {
+        margin-bottom:
+            2px;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ============================================================
+     STARTUP SCREEN
+     ============================================================ -->
+
+<div
+    id="startupScreen"
+>
+
+    <div
+        class="startup-content"
+    >
+
+
+        <!--
+            PLACE YOUR IMAGE HERE LATER.
+
+            JavaScript setting:
+
+            const STARTUP_IMAGE =
+                "assets/startup.png";
+        -->
+
+        <div
+            id="startupImagePlaceholder"
+            class="startup-image-placeholder"
+        >
+            Startup Image
+        </div>
+
+
+        <img
+            id="startupImage"
+            class="startup-image"
+            alt="Web Cue Maker"
+        >
+
+
+        <div class="startup-title">
+            SCE ONE SOUND
+        </div>
+
+
+        <!--
+            Requested spinner.
+        -->
+
+        <div class="spinner"></div>
+
+
+        <div
+            id="startupMessage"
+            class="startup-message"
+        >
+            Starting...
+        </div>
+
+
+        <button
+            id="startupStartButton"
+            class="startup-start-button"
+        >
+            Start Application
+        </button>
+
+
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+
+<header>
+
+
+    <div class="title-area">
+
+        <h1>
+            SCE ONE SOUND
+        </h1>
+
+
+        <span class="version">
+            Version 1.0
+        </span>
+
+
+        <span
+            id="saveStatus"
+            class="save-status saved"
+        >
+            All Changes Saved
+        </span>
+
+    </div>
+
+
+    <div class="toolbar">
+
+
+        <button
+            id="editModeButton"
+            class="mode-button active"
+        >
+            Edit Mode
+        </button>
+
+
+        <button
+            id="showModeButton"
+            class="mode-button"
+        >
+            Show Mode
+        </button>
+
+
+        <button
+            id="hintsButton"
+            class="hints-button"
+        >
+            💡 Hints
+        </button>
+
+
+        <button
+            id="newProjectButton"
+            class="new-button"
+        >
+            New
+        </button>
+
+
+        <button
+            id="openProjectButton"
+            class="open-button"
+        >
+            Open
+        </button>
+
+
+        <button
+            id="addAudioButton"
+            class="add-button"
+        >
+            + Add Audio
+        </button>
+
+
+        <button
+            id="undoButton"
+            class="undo-button"
+            disabled
+        >
+            ↶ Undo
+        </button>
+
+
+        <button
+            id="saveButton"
+            class="save-button"
+        >
+            ↓ Save
+        </button>
+
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+    <!-- ========================================================
+         PROJECT NAME
+         ======================================================== -->
+
+    <div class="project-bar">
+
+        <label
+            for="projectName"
+        >
+            Project:
+        </label>
+
+
+        <input
+            id="projectName"
+            type="text"
+            value="My Show"
+            autocomplete="off"
+        >
+
+    </div>
+
+
+    <!-- ========================================================
+         EDIT MODE
+         ======================================================== -->
+
+    <section
+        id="editMode"
+        class="mode active"
+    >
+
+
+        <div class="edit-mode-content">
+
+
+            <div class="edit-mode-label">
+
+                Edit Mode — arrange, rename, color,
+                and test cues.
+
+            </div>
+
+
+            <input
+                id="audioInput"
+                type="file"
+                accept=".wav,.mp3,audio/wav,audio/mpeg"
+                multiple
+                hidden
+            >
+
+
+            <input
+                id="projectInput"
+                type="file"
+                accept=".zip,application/zip"
+                hidden
+            >
+
+
+            <div class="cue-list">
+
+
+                <div class="cue-header">
+
+                    <div>#</div>
+
+                    <div>Cue Name</div>
+
+                    <div>Color</div>
+
+                    <div>Length</div>
+
+                    <div>Controls</div>
+
+                </div>
+
+
+                <div
+                    id="cueContainer"
+                    class="cue-container"
+                >
+
+                    <div class="empty-state">
+
+                        <strong>
+                            No cues yet.
+                        </strong>
+
+                        <span>
+                            Click + Add Audio to get started.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ========================================================
+         SHOW MODE
+         ======================================================== -->
+
+    <section
+        id="showMode"
+        class="mode"
+    >
+
+
+        <div
+            class="show-mode-content"
+        >
+
+
+            <div class="show-grid">
+
+
+                <!-- ==============================================
+                     NEXT
+                     ============================================== -->
+
+                <div
+                    class="
+                        show-context
+                        next-context
+                    "
+                >
+
+                    <div
+                        class="show-context-label"
+                    >
+                        Next Cue
+                    </div>
+
+
+                    <div
+                        id="nextNumber"
+                        class="show-context-number"
+                    >
+                        —
+                    </div>
+
+
+                    <div
+                        id="nextName"
+                        class="show-context-name"
+                    >
+                        No next cue
+                    </div>
+
+
+                    <div
+                        id="nextFile"
+                        class="show-context-file"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <!-- ==============================================
+                     CURRENT
+                     ============================================== -->
+
+                <div
+                    id="currentShow"
+                    class="current-show"
+                >
+
+
+                    <div
+                        id="currentColorStrip"
+                        class="
+                            current-color-strip
+                            current-color-blue
+                        "
+                    ></div>
+
+
+                    <div
+                        class="current-info"
+                    >
+
+
+                        <div
+                            class="current-label"
+                        >
+                            Current Cue
+                        </div>
+
+
+                        <div
+                            id="currentNumber"
+                            class="current-number"
+                        >
+                            No Cue Selected
+                        </div>
+
+
+                        <div
+                            id="currentName"
+                            class="current-name"
+                        >
+                            Select a cue
+                        </div>
+
+
+                        <div
+                            id="currentFile"
+                            class="current-file"
+                        >
+                            —
+                        </div>
+
+
+                    </div>
+
+
+                    <!--
+                        IMPORTANT:
+                        This GO button exists ONLY inside
+                        the Show Mode section.
+                    -->
+
+                    <button
+                        id="goButton"
+                        class="go-button"
+                        disabled
+                    >
+                        GO
+                    </button>
+
+
+                </div>
+
+
+                <!-- ==============================================
+                     PREVIOUS
+                     ============================================== -->
+
+                <div
+                    class="
+                        show-context
+                        previous-context
+                    "
+                >
+
+                    <div
+                        class="show-context-label"
+                    >
+                        Previous Cue
+                    </div>
+
+
+                    <div
+                        id="previousNumber"
+                        class="show-context-number"
+                    >
+                        —
+                    </div>
+
+
+                    <div
+                        id="previousName"
+                        class="show-context-name"
+                    >
+                        No previous cue
+                    </div>
+
+
+                    <div
+                        id="previousFile"
+                        class="show-context-file"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ==============================================
+                 AUTO ADVANCE
+                 ============================================== -->
+
+            <div class="show-controls">
+
+
+                <label
+                    class="auto-advance-control"
+                    for="autoAdvance"
+                >
+
+                    <input
+                        id="autoAdvance"
+                        type="checkbox"
+                    >
+
+
+                    Advance to the next cue automatically
+                    when playback finishes.
+
+                </label>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ========================================================
+         STATUS
+         ======================================================== -->
+
+    <div
+        id="status"
+        class="status"
+    >
+        Ready.
+    </div>
+
+
+    <!-- ========================================================
+         KEYBOARD SHORTCUTS
+         ======================================================== -->
+
+    <div class="shortcut-bar">
+
+
+        <span class="key">
+            ↑
+        </span>
+        Previous
+
+
+        &nbsp;&nbsp;
+
+
+        <span class="key">
+            ↓
+        </span>
+        Next
+
+
+        &nbsp;&nbsp;
+
+
+        <span class="key">
+            Space
+        </span>
+        GO
+
+
+        &nbsp;&nbsp;
+
+
+        <span class="key">
+            Enter
+        </span>
+        GO
+
+
+        &nbsp;&nbsp;
+
+
+        <span class="key">
+            Esc
+        </span>
+        Stop
+
+
+        &nbsp;&nbsp;
+
+
+        <span class="key">
+            Delete
+        </span>
+        Delete
+
+
+        &nbsp;&nbsp;
+
+
+        <span class="key">
+            Ctrl+Z
+        </span>
+        Undo
+
+
+    </div>
+
+
+</main>
+
+
+<!-- ============================================================
+     HINTS MODAL
+     ============================================================ -->
+
+<div
+    id="hintsModal"
+    class="modal-overlay hidden"
+>
+
+
+    <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+    >
+
+
+        <div class="modal-header">
+
+
+            <h2>
+                💡 ONE SOUND Hints
+            </h2>
+
+
+            <button
+                id="hintsCloseX"
+                class="modal-close"
+                title="Close"
+            >
+                X
+            </button>
+
+
+        </div>
+
+
+        <div class="modal-body">
+
+
+            <div class="hints-section">
+
+                <h3>
+                    Edit Mode
+                </h3>
+
+                Use Edit Mode to add audio, rename cues,
+                choose colors, rearrange cues, and test
+                sounds.
+
+            </div>
+
+
+            <div class="hints-section">
+
+                <h3>
+                    Show Mode
+                </h3>
+
+                Show Mode is designed for running the show.
+
+                <br><br>
+
+                The layout is:
+
+                <strong>
+                    Next → Current → Previous
+                </strong>
+
+                <br><br>
+
+                The large button in the center is
+                <strong>GO</strong>.
+
+            </div>
+
+
+            <div class="hints-section">
+
+                <h3>
+                    GO / STOP
+                </h3>
+
+                When the Current Cue is stopped,
+                the button says <strong>GO</strong>.
+
+                <br><br>
+
+                When it is playing, the same button
+                changes to <strong>STOP</strong>.
+
+            </div>
+
+
+            <div class="hints-section">
+
+                <h3>
+                    Auto Advance
+                </h3>
+
+                When enabled, finishing a cue automatically
+                selects the next cue.
+
+                <br><br>
+
+                The next cue does not begin playing by itself.
+                It becomes the new Current Cue and waits for GO.
+
+            </div>
+
+
+            <div class="hints-section">
+
+                <h3>
+                    Keyboard
+                </h3>
+
+
+                <div class="shortcut-grid">
+
+
+                    <div class="key-label">
+                        ↑
+                    </div>
+
+                    <div class="key-action">
+                        Previous cue
+                    </div>
+
+
+                    <div class="key-label">
+                        ↓
+                    </div>
+
+                    <div class="key-action">
+                        Next cue
+                    </div>
+
+
+                    <div class="key-label">
+                        Space
+                    </div>
+
+                    <div class="key-action">
+                        GO / STOP
+                    </div>
+
+
+                    <div class="key-label">
+                        Enter
+                    </div>
+
+                    <div class="key-action">
+                        GO / STOP
+                    </div>
+
+
+                    <div class="key-label">
+                        Esc
+                    </div>
+
+                    <div class="key-action">
+                        Stop playback
+                    </div>
+
+
+                    <div class="key-label">
+                        Delete
+                    </div>
+
+                    <div class="key-action">
+                        Delete selected cue
+                    </div>
+
+
+                    <div class="key-label">
+                        Ctrl+Z
+                    </div>
+
+                    <div class="key-action">
+                        Undo
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div class="hints-section">
+
+                <h3>
+                    Saving
+                </h3>
+
+                Red text at the top means the project
+                has unsaved changes.
+
+                <br><br>
+
+                Green text means all project changes
+                have been saved.
+
+            </div>
+
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                id="closeHintsButton"
+                class="close-hints-button"
+            >
+                Close
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     UNSAVED CHANGES MODAL
+     ============================================================ -->
+
+<div
+    id="unsavedModal"
+    class="modal-overlay hidden"
+>
+
+
+    <div
+        class="
+            modal
+            unsaved-modal
+        "
+        role="dialog"
+        aria-modal="true"
+    >
+
+
+        <div class="modal-header">
+
+            <h2>
+                Unsaved Changes
+            </h2>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <strong>
+                Your current cue setup has not been saved.
+            </strong>
+
+
+            <br><br>
+
+
+            Continuing will replace the current project.
+
+
+            <br><br>
+
+
+            What would you like to do?
+
+        </div>
+
+
+        <div class="modal-footer">
+
+
+            <div class="modal-actions">
+
+
+                <button
+                    id="modalCancelButton"
+                    class="modal-cancel"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    id="modalIgnoreButton"
+                    class="modal-ignore"
+                >
+                    Ignore
+                </button>
+
+
+                <button
+                    id="modalSaveButton"
+                    class="modal-save"
+                >
+                    Save
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   WEB CUE MAKER 1.0
+   ============================================================ */
+
+
+/* ============================================================
+   STARTUP SETTINGS
+   ============================================================ */
+
+
+/*
+    ADD YOUR FILES HERE LATER.
+
+    Example:
+
+    const STARTUP_IMAGE =
+        "assets/startup.png";
+
+    const STARTUP_SOUND =
+        "assets/startup.mp3";
+*/
+
+const STARTUP_IMAGE = "https://sce1.com/assets/sce1sound/startup.jpg";
+
+const STARTUP_SOUND = "https://sce1.com/assets/sce1sound/Untitled4.mp3";
+
+
+/*
+    Wait 2 seconds before attempting the startup sound.
+*/
+
+const STARTUP_DELAY = 2000;
+
+
+/* ============================================================
+   STATE
+   ============================================================ */
+
+let cues = [];
+
+let nextCueId = 1;
+
+let selectedCueId = null;
+
+let currentAudio = null;
+
+let currentPlayingCueId = null;
+
+let draggedCueId = null;
+
+let projectHasChanges = false;
+
+let pendingAction = null;
+
+let currentMode = "edit";
+
+let autoAdvance = false;
+
+
+/*
+    UNDO
+*/
+
+const MAX_UNDO_STEPS = 50;
+
+let undoHistory = [];
+
+
+/* ============================================================
+   DOM
+   ============================================================ */
+
+const startupScreen =
+    document.getElementById(
+        "startupScreen"
+    );
+
+const startupImage =
+    document.getElementById(
+        "startupImage"
+    );
+
+const startupImagePlaceholder =
+    document.getElementById(
+        "startupImagePlaceholder"
+    );
+
+const startupMessage =
+    document.getElementById(
+        "startupMessage"
+    );
+
+const startupStartButton =
+    document.getElementById(
+        "startupStartButton"
+    );
+
+
+const editMode =
+    document.getElementById(
+        "editMode"
+    );
+
+const showMode =
+    document.getElementById(
+        "showMode"
+    );
+
+const editModeButton =
+    document.getElementById(
+        "editModeButton"
+    );
+
+const showModeButton =
+    document.getElementById(
+        "showModeButton"
+    );
+
+const hintsButton =
+    document.getElementById(
+        "hintsButton"
+    );
+
+const hintsModal =
+    document.getElementById(
+        "hintsModal"
+    );
+
+const hintsCloseX =
+    document.getElementById(
+        "hintsCloseX"
+    );
+
+const closeHintsButton =
+    document.getElementById(
+        "closeHintsButton"
+    );
+
+
+const newProjectButton =
+    document.getElementById(
+        "newProjectButton"
+    );
+
+const openProjectButton =
+    document.getElementById(
+        "openProjectButton"
+    );
+
+const addAudioButton =
+    document.getElementById(
+        "addAudioButton"
+    );
+
+const undoButton =
+    document.getElementById(
+        "undoButton"
+    );
+
+const saveButton =
+    document.getElementById(
+        "saveButton"
+    );
+
+const goButton =
+    document.getElementById(
+        "goButton"
+    );
+
+const saveStatus =
+    document.getElementById(
+        "saveStatus"
+    );
+
+const projectNameInput =
+    document.getElementById(
+        "projectName"
+    );
+
+const audioInput =
+    document.getElementById(
+        "audioInput"
+    );
+
+const projectInput =
+    document.getElementById(
+        "projectInput"
+    );
+
+const cueContainer =
+    document.getElementById(
+        "cueContainer"
+    );
+
+const statusElement =
+    document.getElementById(
+        "status"
+    );
+
+const currentShow =
+    document.getElementById(
+        "currentShow"
+    );
+
+const currentColorStrip =
+    document.getElementById(
+        "currentColorStrip"
+    );
+
+const currentNumber =
+    document.getElementById(
+        "currentNumber"
+    );
+
+const currentName =
+    document.getElementById(
+        "currentName"
+    );
+
+const currentFile =
+    document.getElementById(
+        "currentFile"
+    );
+
+const nextNumber =
+    document.getElementById(
+        "nextNumber"
+    );
+
+const nextName =
+    document.getElementById(
+        "nextName"
+    );
+
+const nextFile =
+    document.getElementById(
+        "nextFile"
+    );
+
+const previousNumber =
+    document.getElementById(
+        "previousNumber"
+    );
+
+const previousName =
+    document.getElementById(
+        "previousName"
+    );
+
+const previousFile =
+    document.getElementById(
+        "previousFile"
+    );
+
+const autoAdvanceCheckbox =
+    document.getElementById(
+        "autoAdvance"
+    );
+
+const unsavedModal =
+    document.getElementById(
+        "unsavedModal"
+    );
+
+const modalCancelButton =
+    document.getElementById(
+        "modalCancelButton"
+    );
+
+const modalIgnoreButton =
+    document.getElementById(
+        "modalIgnoreButton"
+    );
+
+const modalSaveButton =
+    document.getElementById(
+        "modalSaveButton"
+    );
+
+
+/* ============================================================
+   STARTUP
+   ============================================================ */
+
+function initializeStartup() {
+
+    /*
+        Startup image.
+    */
+
+    if (
+        STARTUP_IMAGE
+    ) {
+
+        startupImage.src =
+            STARTUP_IMAGE;
+
+        startupImage.classList.add(
+            "visible"
+        );
+
+        startupImagePlaceholder.style.display =
+            "none";
+    }
+
+
+    /*
+        The 2-second delay happens BEFORE
+        the startup sound.
+    */
+
+    setTimeout(
+        () => {
+
+            playStartupSound();
+
+        },
+        STARTUP_DELAY
+    );
+}
+
+
+async function playStartupSound() {
+
+    /*
+        No startup sound configured yet.
+    */
+
+    if (
+        !STARTUP_SOUND
+    ) {
+
+        startupMessage.textContent =
+            "Ready.";
+
+        setTimeout(
+            () => {
+
+                finishStartup();
+
+            },
+            300
+        );
+
+        return;
+    }
+
+
+    const startupAudio =
+        new Audio(
+            STARTUP_SOUND
+        );
+
+
+    startupAudio.preload =
+        "auto";
+
+
+    startupMessage.textContent =
+        "Starting application...";
+
+
+    try {
+
+        await startupAudio.play();
+
+
+        startupAudio.addEventListener(
+            "ended",
+            finishStartup,
+            {
+                once:
+                    true
+            }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Startup sound autoplay was blocked.",
+            error
+        );
+
+
+        startupMessage.textContent =
+            "Click Start Application to begin.";
+
+
+        startupStartButton.style.display =
+            "inline-block";
+
+
+        startupStartButton.disabled =
+            false;
+
+
+        startupStartButton.onclick =
+            async () => {
+
+                startupStartButton.disabled =
+                    true;
+
+
+                startupMessage.textContent =
+                    "Starting application...";
+
+
+                try {
+
+                    await startupAudio.play();
+
+
+                    startupAudio.addEventListener(
+                        "ended",
+                        finishStartup,
+                        {
+                            once:
+                                true
+                        }
+                    );
+
+                } catch (playError) {
+
+                    console.error(
+                        playError
+                    );
+
+
+                    startupMessage.textContent =
+                        "Unable to play the startup sound.";
+
+
+                    startupStartButton.disabled =
+                        false;
+                }
+            };
+    }
+}
+
+
+function finishStartup() {
+
+    startupScreen.classList.add(
+        "hidden"
+    );
+
+
+    /*
+        Show Hints after startup.
+    */
+
+    setTimeout(
+        () => {
+
+            openHints();
+
+        },
+        150
+    );
+}
+
+
+/* ============================================================
+   HINTS
+   ============================================================ */
+
+function openHints() {
+
+    hintsModal.classList.remove(
+        "hidden"
+    );
+}
+
+
+function closeHints() {
+
+    hintsModal.classList.add(
+        "hidden"
+    );
+}
+
+
+hintsButton.addEventListener(
+    "click",
+    openHints
+);
+
+
+hintsCloseX.addEventListener(
+    "click",
+    closeHints
+);
+
+
+closeHintsButton.addEventListener(
+    "click",
+    closeHints
+);
+
+
+hintsModal.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            hintsModal
+        ) {
+
+            closeHints();
+        }
+    }
+);
+
+
+/* ============================================================
+   MODE SWITCHING
+   ============================================================ */
+
+editModeButton.addEventListener(
+    "click",
+    () => {
+
+        setMode(
+            "edit"
+        );
+    }
+);
+
+
+showModeButton.addEventListener(
+    "click",
+    () => {
+
+        setMode(
+            "show"
+        );
+    }
+);
+
+
+function setMode(
+    mode
+) {
+
+    currentMode =
+        mode;
+
+
+    if (
+        mode ===
+        "edit"
+    ) {
+
+        editMode.classList.add(
+            "active"
+        );
+
+        showMode.classList.remove(
+            "active"
+        );
+
+        editModeButton.classList.add(
+            "active"
+        );
+
+        showModeButton.classList.remove(
+            "active"
+        );
+
+    } else {
+
+        editMode.classList.remove(
+            "active"
+        );
+
+        showMode.classList.add(
+            "active"
+        );
+
+        editModeButton.classList.remove(
+            "active"
+        );
+
+        showModeButton.classList.add(
+            "active"
+        );
+
+    }
+
+
+    updateShowMode();
+
+
+    setStatus(
+        mode ===
+            "show"
+            ? "Show Mode"
+            : "Edit Mode"
+    );
+}
+
+
+/* ============================================================
+   SAVE STATUS
+   ============================================================ */
+
+function updateSaveStatus() {
+
+    if (
+        projectHasChanges
+    ) {
+
+        saveStatus.textContent =
+            "NO CHANGES SAVED! - SAVE THE FILE TO KEEP YOUR PROGRESS!";
+
+        saveStatus.classList.remove(
+            "saved"
+        );
+
+        saveStatus.classList.add(
+            "unsaved"
+        );
+
+    } else {
+
+        saveStatus.textContent =
+            "All Changes Saved";
+
+        saveStatus.classList.remove(
+            "unsaved"
+        );
+
+        saveStatus.classList.add(
+            "saved"
+        );
+    }
+}
+
+
+function markChanged() {
+
+    projectHasChanges =
+        true;
+
+    updateSaveStatus();
+}
+
+
+/* ============================================================
+   AUTO ADVANCE
+   ============================================================ */
+
+
+/*
+    THIS WAS THE MISSING CONNECTION IN THE PREVIOUS VERSION.
+*/
+
+autoAdvanceCheckbox.addEventListener(
+    "change",
+    () => {
+
+        autoAdvance =
+            autoAdvanceCheckbox.checked;
+
+
+        setStatus(
+            autoAdvance
+                ? "Auto Advance enabled."
+                : "Auto Advance disabled."
+        );
+    }
+);
+
+
+/* ============================================================
+   UNDO
+   ============================================================ */
+
+function createSnapshot() {
+
+    return {
+
+        projectName:
+            projectNameInput.value,
+
+        selectedCueId:
+            selectedCueId,
+
+        nextCueId:
+            nextCueId,
+
+        cues:
+            cues.map(
+                cue => ({
+
+                    id:
+                        cue.id,
+
+                    name:
+                        cue.name,
+
+                    file:
+                        cue.file,
+
+                    fileName:
+                        cue.fileName,
+
+                    duration:
+                        cue.duration,
+
+                    objectUrl:
+                        cue.objectUrl,
+
+                    color:
+                        cue.color ||
+                        "none"
+                })
+            )
+    };
+}
+
+
+function saveUndoState() {
+
+    undoHistory.push(
+        createSnapshot()
+    );
+
+
+    if (
+        undoHistory.length >
+        MAX_UNDO_STEPS
+    ) {
+
+        undoHistory.shift();
+    }
+
+
+    updateUndoButton();
+}
+
+
+function performUndo() {
+
+    if (
+        undoHistory.length ===
+        0
+    ) {
+
+        setStatus(
+            "Nothing to undo."
+        );
+
+
+        return;
+    }
+
+
+    const snapshot =
+        undoHistory.pop();
+
+
+    stopCurrentAudio();
+
+
+    cues =
+        snapshot.cues.map(
+            cue => ({
+
+                id:
+                    cue.id,
+
+                name:
+                    cue.name,
+
+                file:
+                    cue.file,
+
+                fileName:
+                    cue.fileName,
+
+                duration:
+                    cue.duration,
+
+                objectUrl:
+                    cue.objectUrl,
+
+                color:
+                    cue.color ||
+                    "none"
+            })
+        );
+
+
+    selectedCueId =
+        snapshot.selectedCueId;
+
+
+    nextCueId =
+        snapshot.nextCueId;
+
+
+    projectNameInput.value =
+        snapshot.projectName;
+
+
+    markChanged();
+
+
+    renderCues();
+
+
+    updateShowMode();
+
+
+    updateUndoButton();
+
+
+    setStatus(
+        "Undo completed."
+    );
+
+
+    scrollCueIntoView(
+        selectedCueId
+    );
+}
+
+
+function updateUndoButton() {
+
+    undoButton.disabled =
+        undoHistory.length ===
+        0;
+
+
+    undoButton.textContent =
+        undoHistory.length > 0
+            ? `↶ Undo (${undoHistory.length})`
+            : "↶ Undo";
+}
+
+
+undoButton.addEventListener(
+    "click",
+    performUndo
+);
+
+
+/* ============================================================
+   ADD AUDIO
+   ============================================================ */
+
+addAudioButton.addEventListener(
+    "click",
+    () => {
+
+        audioInput.click();
+    }
+);
+
+
+audioInput.addEventListener(
+    "change",
+    event => {
+
+        const files =
+            Array.from(
+                event.target.files
+            );
+
+
+        if (
+            files.length ===
+            0
+        ) {
+
+            return;
+        }
+
+
+        saveUndoState();
+
+
+        let lastAddedCueId =
+            null;
+
+
+        for (
+            const file of
+            files
+        ) {
+
+            const name =
+                file.name.replace(
+                    /\.[^/.]+$/,
+                    ""
+                );
+
+
+            const cue = {
+
+                id:
+                    nextCueId++,
+
+                name:
+                    name,
+
+                file:
+                    file,
+
+                fileName:
+                    file.name,
+
+                duration:
+                    null,
+
+                objectUrl:
+                    URL.createObjectURL(
+                        file
+                    ),
+
+                color:
+                    "none"
+            };
+
+
+            cues.push(
+                cue
+            );
+
+
+            lastAddedCueId =
+                cue.id;
+
+
+            determineDuration(
+                cue
+            );
+        }
+
+
+        selectedCueId =
+            lastAddedCueId;
+
+
+        markChanged();
+
+
+        renderCues();
+
+
+        updateShowMode();
+
+
+        scrollCueIntoView(
+            selectedCueId
+        );
+
+
+        setStatus(
+            `${files.length} audio file${files.length === 1 ? "" : "s"} added.`
+        );
+
+
+        audioInput.value =
+            "";
+    }
+);
+
+
+/* ============================================================
+   AUDIO DURATION
+   ============================================================ */
+
+function determineDuration(
+    cue
+) {
+
+    const audio =
+        new Audio();
+
+
+    audio.preload =
+        "metadata";
+
+
+    audio.src =
+        cue.objectUrl;
+
+
+    audio.addEventListener(
+        "loadedmetadata",
+        () => {
+
+            cue.duration =
+                audio.duration;
+
+
+            renderCues();
+        }
+    );
+
+
+    audio.addEventListener(
+        "error",
+        () => {
+
+            cue.duration =
+                null;
+
+
+            renderCues();
+        }
+    );
+}
+
+
+/* ============================================================
+   CUE HELPERS
+   ============================================================ */
+
+function getCueIndex(
+    cueId
+) {
+
+    return cues.findIndex(
+        cue =>
+            cue.id ===
+            cueId
+    );
+}
+
+
+function getCueNumber(
+    cueId
+) {
+
+    const index =
+        getCueIndex(
+            cueId
+        );
+
+
+    if (
+        index ===
+        -1
+    ) {
+
+        return "?";
+    }
+
+
+    return index + 1;
+}
+
+
+function getCurrentCue() {
+
+    if (
+        selectedCueId ===
+        null
+    ) {
+
+        return null;
+    }
+
+
+    return cues.find(
+        cue =>
+            cue.id ===
+            selectedCueId
+    ) || null;
+}
+
+
+function getNextCue() {
+
+    const index =
+        getCueIndex(
+            selectedCueId
+        );
+
+
+    if (
+        index ===
+        -1 ||
+        index >=
+            cues.length - 1
+    ) {
+
+        return null;
+    }
+
+
+    return cues[index + 1];
+}
+
+
+function getPreviousCue() {
+
+    const index =
+        getCueIndex(
+            selectedCueId
+        );
+
+
+    if (
+        index <=
+        0
+    ) {
+
+        return null;
+    }
+
+
+    return cues[index - 1];
+}
+
+
+/* ============================================================
+   SELECT CUE
+   ============================================================ */
+
+function selectCue(
+    cueId,
+    showStatus = true
+) {
+
+    const cue =
+        cues.find(
+            item =>
+                item.id ===
+                cueId
+        );
+
+
+    if (
+        !cue
+    ) {
+
+        return;
+    }
+
+
+    selectedCueId =
+        cueId;
+
+
+    renderCues();
+
+
+    updateShowMode();
+
+
+    if (
+        showStatus
+    ) {
+
+        setStatus(
+            `Selected Cue ${getCueNumber(cueId)}: ${cue.name}`
+        );
+    }
+
+
+    scrollCueIntoView(
+        cueId
+    );
+}
+
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+
+function selectNextCue() {
+
+    if (
+        cues.length ===
+        0
+    ) {
+
+        return;
+    }
+
+
+    if (
+        selectedCueId ===
+        null
+    ) {
+
+        selectCue(
+            cues[0].id
+        );
+
+
+        return;
+    }
+
+
+    const index =
+        getCueIndex(
+            selectedCueId
+        );
+
+
+    if (
+        index <
+        cues.length - 1
+    ) {
+
+        selectCue(
+            cues[index + 1].id
+        );
+
+    } else {
+
+        setStatus(
+            "Already at the last cue."
+        );
+    }
+}
+
+
+function selectPreviousCue() {
+
+    if (
+        cues.length ===
+        0
+    ) {
+
+        return;
+    }
+
+
+    if (
+        selectedCueId ===
+        null
+    ) {
+
+        selectCue(
+            cues[0].id
+        );
+
+
+        return;
+    }
+
+
+    const index =
+        getCueIndex(
+            selectedCueId
+        );
+
+
+    if (
+        index >
+        0
+    ) {
+
+        selectCue(
+            cues[index - 1].id
+        );
+
+    } else {
+
+        setStatus(
+            "Already at the first cue."
+        );
+    }
+}
+
+
+/* ============================================================
+   SHOW MODE DISPLAY
+   ============================================================ */
+
+function updateShowMode() {
+
+    const current =
+        getCurrentCue();
+
+
+    const next =
+        getNextCue();
+
+
+    const previous =
+        getPreviousCue();
+
+
+    /*
+        CURRENT
+    */
+
+    if (
+        current
+    ) {
+
+        currentNumber.textContent =
+            `Cue ${getCueNumber(current.id)}`;
+
+
+        currentName.textContent =
+            current.name ||
+            "Unnamed Cue";
+
+
+        currentFile.textContent =
+            current.fileName;
+
+
+        currentColorStrip.className =
+            `current-color-strip current-color-${current.color || "none"}`;
+
+
+        const playing =
+            currentPlayingCueId ===
+            current.id;
+
+
+        currentShow.classList.toggle(
+            "playing",
+            playing
+        );
+
+
+        goButton.classList.toggle(
+            "playing",
+            playing
+        );
+
+
+        goButton.textContent =
+            playing
+                ? "STOP"
+                : "GO";
+
+
+        goButton.disabled =
+            false;
+
+
+    } else {
+
+        currentNumber.textContent =
+            "No Cue Selected";
+
+
+        currentName.textContent =
+            "Select a cue";
+
+
+        currentFile.textContent =
+            "—";
+
+
+        currentColorStrip.className =
+            "current-color-strip current-color-blue";
+
+
+        currentShow.classList.remove(
+            "playing"
+        );
+
+
+        goButton.classList.remove(
+            "playing"
+        );
+
+
+        goButton.textContent =
+            "GO";
+
+
+        goButton.disabled =
+            true;
+    }
+
+
+    /*
+        NEXT
+    */
+
+    if (
+        next
+    ) {
+
+        nextNumber.textContent =
+            `Cue ${getCueNumber(next.id)}`;
+
+
+        nextName.textContent =
+            next.name ||
+            "Unnamed Cue";
+
+
+        nextFile.textContent =
+            next.fileName;
+
+    } else {
+
+        nextNumber.textContent =
+            "—";
+
+
+        nextName.textContent =
+            cues.length ===
+                0
+                ? "No cues"
+                : "No next cue";
+
+
+        nextFile.textContent =
+            "—";
+    }
+
+
+    /*
+        PREVIOUS
+    */
+
+    if (
+        previous
+    ) {
+
+        previousNumber.textContent =
+            `Cue ${getCueNumber(previous.id)}`;
+
+
+        previousName.textContent =
+            previous.name ||
+            "Unnamed Cue";
+
+
+        previousFile.textContent =
+            previous.fileName;
+
+    } else {
+
+        previousNumber.textContent =
+            "—";
+
+
+        previousName.textContent =
+            cues.length ===
+                0
+                ? "No cues"
+                : "No previous cue";
+
+
+        previousFile.textContent =
+            "—";
+    }
+}
+
+
+/* ============================================================
+   GO / STOP
+   ============================================================ */
+
+goButton.addEventListener(
+    "click",
+    () => {
+
+        triggerSelectedCue();
+    }
+);
+
+
+function triggerSelectedCue() {
+
+    const cue =
+        getCurrentCue();
+
+
+    if (
+        !cue
+    ) {
+
+        setStatus(
+            "No cue selected."
+        );
+
+
+        return;
+    }
+
+
+    /*
+        If current cue is already playing,
+        the big button becomes STOP.
+    */
+
+    if (
+        currentPlayingCueId ===
+        cue.id
+    ) {
+
+        stopCurrentAudio();
+
+
+        renderCues();
+
+
+        updateShowMode();
+
+
+        setStatus(
+            `Stopped Cue ${getCueNumber(cue.id)}: ${cue.name}`
+        );
+
+
+        return;
+    }
+
+
+    playCue(
+        cue
+    );
+}
+
+
+/* ============================================================
+   PLAY CUE
+   ============================================================ */
+
+function playCue(
+    cue
+) {
+
+    stopCurrentAudio();
+
+
+    selectedCueId =
+        cue.id;
+
+
+    currentPlayingCueId =
+        cue.id;
+
+
+    currentAudio =
+        new Audio(
+            cue.objectUrl
+        );
+
+
+    renderCues();
+
+
+    updateShowMode();
+
+
+    setStatus(
+        `GO — Cue ${getCueNumber(cue.id)}: ${cue.name}`
+    );
+
+
+    currentAudio.addEventListener(
+        "ended",
+        () => {
+
+            /*
+                Remember EXACTLY which cue finished.
+            */
+
+            const finishedCueId =
+                cue.id;
+
+
+            currentAudio =
+                null;
+
+
+            currentPlayingCueId =
+                null;
+
+
+            /*
+                =================================================
+                AUTO ADVANCE
+                =================================================
+
+                This is the important part.
+
+                We find the cue that ACTUALLY finished,
+                then select the next cue in the current
+                cue array.
+            */
+
+            if (
+                autoAdvance
+            ) {
+
+                const finishedIndex =
+                    cues.findIndex(
+                        item =>
+                            item.id ===
+                            finishedCueId
+                    );
+
+
+                if (
+                    finishedIndex !==
+                        -1 &&
+                    finishedIndex + 1 <
+                        cues.length
+                ) {
+
+                    const nextCue =
+                        cues[
+                            finishedIndex + 1
+                        ];
+
+
+                    selectedCueId =
+                        nextCue.id;
+
+
+                    renderCues();
+
+
+                    updateShowMode();
+
+
+                    scrollCueIntoView(
+                        selectedCueId
+                    );
+
+
+                    setStatus(
+                        `Auto Advance — Cue ${getCueNumber(nextCue.id)}: ${nextCue.name}`
+                    );
+
+
+                } else {
+
+                    /*
+                        No next cue means this was
+                        the final cue.
+                    */
+
+                    renderCues();
+
+
+                    updateShowMode();
+
+
+                    setStatus(
+                        `Finished: ${cue.name} — End of cue list`
+                    );
+                }
+
+
+            } else {
+
+                renderCues();
+
+
+                updateShowMode();
+
+
+                setStatus(
+                    `Finished: ${cue.name}`
+                );
+            }
+
+        },
+        {
+            once:
+                true
+        }
+    );
+
+
+    currentAudio.addEventListener(
+        "error",
+        () => {
+
+            currentAudio =
+                null;
+
+
+            currentPlayingCueId =
+                null;
+
+
+            renderCues();
+
+
+            updateShowMode();
+
+
+            setStatus(
+                `Unable to play: ${cue.fileName}`
+            );
+
+        },
+        {
+            once:
+                true
+        }
+    );
+
+
+    currentAudio
+        .play()
+        .catch(
+            error => {
+
+                console.error(
+                    error
+                );
+
+
+                currentAudio =
+                    null;
+
+
+                currentPlayingCueId =
+                    null;
+
+
+                renderCues();
+
+
+                updateShowMode();
+
+
+                setStatus(
+                    `Unable to play: ${cue.name}`
+                );
+            }
+        );
+}
+
+
+/* ============================================================
+   STOP
+   ============================================================ */
+
+function stopCurrentAudio() {
+
+    if (
+        currentAudio
+    ) {
+
+        currentAudio.pause();
+
+
+        currentAudio.currentTime =
+            0;
+
+
+        currentAudio =
+            null;
+    }
+
+
+    currentPlayingCueId =
+        null;
+}
+
+
+/* ============================================================
+   DELETE
+   ============================================================ */
+
+function deleteCue(
+    cueId
+) {
+
+    const index =
+        getCueIndex(
+            cueId
+        );
+
+
+    if (
+        index ===
+        -1
+    ) {
+
+        return;
+    }
+
+
+    const cue =
+        cues[index];
+
+
+    saveUndoState();
+
+
+    if (
+        currentPlayingCueId ===
+        cueId
+    ) {
+
+        stopCurrentAudio();
+    }
+
+
+    const wasSelected =
+        selectedCueId ===
+        cueId;
+
+
+    cues.splice(
+        index,
+        1
+    );
+
+
+    if (
+        wasSelected
+    ) {
+
+        if (
+            cues.length ===
+            0
+        ) {
+
+            selectedCueId =
+                null;
+
+        } else if (
+            index <
+            cues.length
+        ) {
+
+            selectedCueId =
+                cues[index].id;
+
+        } else {
+
+            selectedCueId =
+                cues[
+                    cues.length - 1
+                ].id;
+        }
+    }
+
+
+    markChanged();
+
+
+    renderCues();
+
+
+    updateShowMode();
+
+
+    setStatus(
+        `Deleted cue: ${cue.name}`
+    );
+
+
+    scrollCueIntoView(
+        selectedCueId
+    );
+}
+
+
+/* ============================================================
+   REORDER
+   ============================================================ */
+
+function reorderCues(
+    sourceId,
+    targetId
+) {
+
+    const sourceIndex =
+        getCueIndex(
+            sourceId
+        );
+
+
+    const targetIndex =
+        getCueIndex(
+            targetId
+        );
+
+
+    if (
+        sourceIndex ===
+            -1 ||
+        targetIndex ===
+            -1
+    ) {
+
+        return;
+    }
+
+
+    saveUndoState();
+
+
+    const [movedCue] =
+        cues.splice(
+            sourceIndex,
+            1
+        );
+
+
+    let insertIndex =
+        targetIndex;
+
+
+    if (
+        sourceIndex <
+        targetIndex
+    ) {
+
+        insertIndex--;
+    }
+
+
+    cues.splice(
+        insertIndex,
+        0,
+        movedCue
+    );
+
+
+    selectedCueId =
+        sourceId;
+
+
+    markChanged();
+
+
+    renderCues();
+
+
+    updateShowMode();
+
+
+    setStatus(
+        "Cue order updated."
+    );
+
+
+    scrollCueIntoView(
+        sourceId
+    );
+}
+
+
+/* ============================================================
+   RENDER CUES
+   ============================================================ */
+
+function renderCues() {
+
+    cueContainer.innerHTML =
+        "";
+
+
+    if (
+        cues.length ===
+        0
+    ) {
+
+        const empty =
+            document.createElement(
+                "div"
+            );
+
+
+        empty.className =
+            "empty-state";
+
+
+        empty.innerHTML = `
+
+            <strong>
+                No cues yet.
+            </strong>
+
+            <span>
+                Click + Add Audio to get started.
+            </span>
+
+        `;
+
+
+        cueContainer.appendChild(
+            empty
+        );
+
+
+        updateShowMode();
+
+
+        return;
+    }
+
+
+    cues.forEach(
+        (cue, index) => {
+
+
+            const cueElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            cueElement.className =
+                "cue";
+
+
+            cueElement.draggable =
+                true;
+
+
+            cueElement.dataset.id =
+                String(
+                    cue.id
+                );
+
+
+            /*
+                Selected
+            */
+
+            if (
+                cue.id ===
+                selectedCueId
+            ) {
+
+                cueElement.classList.add(
+                    "selected"
+                );
+            }
+
+
+            /*
+                Playing
+            */
+
+            if (
+                cue.id ===
+                currentPlayingCueId
+            ) {
+
+                cueElement.classList.add(
+                    "playing"
+                );
+            }
+
+
+            /*
+                Color
+            */
+
+            cueElement.classList.add(
+                `color-${cue.color || "none"}`
+            );
+
+
+            /*
+                NUMBER
+            */
+
+            const numberElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            numberElement.className =
+                "cue-number";
+
+
+            numberElement.textContent =
+                index + 1;
+
+
+            /*
+                NAME
+            */
+
+            const nameElement =
+                document.createElement(
+                    "input"
+                );
+
+
+            nameElement.type =
+                "text";
+
+
+            nameElement.className =
+                "cue-name-input";
+
+
+            nameElement.value =
+                cue.name;
+
+
+            let originalName =
+                cue.name;
+
+
+            nameElement.addEventListener(
+                "focus",
+                () => {
+
+                    originalName =
+                        cue.name;
+
+
+                    saveUndoState();
+                }
+            );
+
+
+            nameElement.addEventListener(
+                "input",
+                event => {
+
+                    cue.name =
+                        event.target.value;
+
+
+                    markChanged();
+
+
+                    updateShowMode();
+                }
+            );
+
+
+            nameElement.addEventListener(
+                "blur",
+                () => {
+
+                    if (
+                        originalName ===
+                        cue.name
+                    ) {
+
+                        /*
+                            Remove the unnecessary undo
+                            snapshot if nothing changed.
+                        */
+
+                        if (
+                            undoHistory.length >
+                            0
+                        ) {
+
+                            undoHistory.pop();
+
+
+                            updateUndoButton();
+                        }
+
+                    } else {
+
+                        setStatus(
+                            `Renamed Cue ${getCueNumber(cue.id)}.`
+                        );
+                    }
+                }
+            );
+
+
+            nameElement.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key ===
+                        "Enter"
+                    ) {
+
+                        event.target.blur();
+                    }
+                }
+            );
+
+
+            nameElement.addEventListener(
+                "dblclick",
+                event => {
+
+                    event.stopPropagation();
+
+
+                    selectCue(
+                        cue.id,
+                        false
+                    );
+
+
+                    nameElement.focus();
+
+
+                    nameElement.select();
+                }
+            );
+
+
+            /*
+                FILE
+            */
+
+            const fileElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            fileElement.className =
+                "file-name";
+
+
+            fileElement.title =
+                cue.fileName;
+
+
+            fileElement.textContent =
+                cue.fileName;
+
+
+            nameElement.title =
+                cue.fileName;
+
+
+            /*
+                COLOR
+            */
+
+            const colorElement =
+                document.createElement(
+                    "select"
+                );
+
+
+            colorElement.className =
+                "color-select";
+
+
+            [
+                ["none", "None"],
+                ["blue", "Blue"],
+                ["green", "Green"],
+                ["yellow", "Yellow"],
+                ["orange", "Orange"],
+                ["red", "Red"],
+                ["purple", "Purple"],
+                ["cyan", "Cyan"]
+            ]
+            .forEach(
+                ([value, label]) => {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value =
+                        value;
+
+
+                    option.textContent =
+                        label;
+
+
+                    if (
+                        (cue.color ||
+                            "none") ===
+                        value
+                    ) {
+
+                        option.selected =
+                            true;
+                    }
+
+
+                    colorElement.appendChild(
+                        option
+                    );
+                }
+            );
+
+
+            colorElement.addEventListener(
+                "change",
+                event => {
+
+                    saveUndoState();
+
+
+                    cue.color =
+                        event.target.value;
+
+
+                    markChanged();
+
+
+                    renderCues();
+
+
+                    updateShowMode();
+
+
+                    setStatus(
+                        `Cue ${getCueNumber(cue.id)} color changed.`
+                    );
+                }
+            );
+
+
+            /*
+                DURATION
+            */
+
+            const durationElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            durationElement.className =
+                "duration";
+
+
+            durationElement.textContent =
+                cue.duration !== null
+                    ? formatDuration(
+                        cue.duration
+                    )
+                    : "--:--";
+
+
+            /*
+                ACTIONS
+            */
+
+            const controlsElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            controlsElement.className =
+                "cue-actions";
+
+
+            const playButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            playButton.className =
+                currentPlayingCueId ===
+                    cue.id
+                    ? "small-button stop-cue-button"
+                    : "small-button play-button";
+
+
+            playButton.textContent =
+                currentPlayingCueId ===
+                    cue.id
+                    ? "■ Stop"
+                    : "▶ Play";
+
+
+            playButton.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+
+                    selectCue(
+                        cue.id,
+                        false
+                    );
+
+
+                    if (
+                        currentPlayingCueId ===
+                        cue.id
+                    ) {
+
+                        stopCurrentAudio();
+
+
+                        renderCues();
+
+
+                        updateShowMode();
+
+
+                        setStatus(
+                            "Playback stopped."
+                        );
+
+
+                        return;
+                    }
+
+
+                    playCue(
+                        cue
+                    );
+                }
+            );
+
+
+            const deleteButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            deleteButton.className =
+                "small-button delete-button";
+
+
+            deleteButton.textContent =
+                "Delete";
+
+
+            deleteButton.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+
+                    deleteCue(
+                        cue.id
+                    );
+                }
+            );
+
+
+            controlsElement.appendChild(
+                playButton
+            );
+
+
+            controlsElement.appendChild(
+                deleteButton
+            );
+
+
+            /*
+                BUILD ROW
+            */
+
+            cueElement.appendChild(
+                numberElement
+            );
+
+
+            cueElement.appendChild(
+                nameElement
+            );
+
+
+            cueElement.appendChild(
+                colorElement
+            );
+
+
+            cueElement.appendChild(
+                durationElement
+            );
+
+
+            cueElement.appendChild(
+                controlsElement
+            );
+
+
+            /*
+                SELECT
+            */
+
+            cueElement.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target.tagName ===
+                            "INPUT" ||
+                        event.target.tagName ===
+                            "SELECT" ||
+                        event.target.tagName ===
+                            "OPTION" ||
+                        event.target.tagName ===
+                            "BUTTON"
+                    ) {
+
+                        return;
+                    }
+
+
+                    selectCue(
+                        cue.id
+                    );
+                }
+            );
+
+
+            /*
+                DRAG START
+            */
+
+            cueElement.addEventListener(
+                "dragstart",
+                event => {
+
+                    draggedCueId =
+                        cue.id;
+
+
+                    selectCue(
+                        cue.id,
+                        false
+                    );
+
+
+                    cueElement.classList.add(
+                        "dragging"
+                    );
+
+
+                    event.dataTransfer.effectAllowed =
+                        "move";
+
+
+                    event.dataTransfer.setData(
+                        "text/plain",
+                        String(
+                            cue.id
+                        )
+                    );
+                }
+            );
+
+
+            /*
+                DRAG END
+            */
+
+            cueElement.addEventListener(
+                "dragend",
+                () => {
+
+                    draggedCueId =
+                        null;
+
+
+                    cueElement.classList.remove(
+                        "dragging"
+                    );
+
+
+                    document
+                        .querySelectorAll(
+                            ".cue"
+                        )
+                        .forEach(
+                            element => {
+
+                                element.classList.remove(
+                                    "drag-over"
+                                );
+                            }
+                        );
+                }
+            );
+
+
+            /*
+                DRAG OVER
+            */
+
+            cueElement.addEventListener(
+                "dragover",
+                event => {
+
+                    event.preventDefault();
+
+
+                    if (
+                        draggedCueId !==
+                        cue.id
+                    ) {
+
+                        cueElement.classList.add(
+                            "drag-over"
+                        );
+                    }
+                }
+            );
+
+
+            /*
+                DRAG LEAVE
+            */
+
+            cueElement.addEventListener(
+                "dragleave",
+                () => {
+
+                    cueElement.classList.remove(
+                        "drag-over"
+                    );
+                }
+            );
+
+
+            /*
+                DROP
+            */
+
+            cueElement.addEventListener(
+                "drop",
+                event => {
+
+                    event.preventDefault();
+
+
+                    cueElement.classList.remove(
+                        "drag-over"
+                    );
+
+
+                    const droppedCueId =
+                        Number(
+                            event.dataTransfer.getData(
+                                "text/plain"
+                            )
+                        );
+
+
+                    if (
+                        !droppedCueId ||
+                        droppedCueId ===
+                            cue.id
+                    ) {
+
+                        return;
+                    }
+
+
+                    reorderCues(
+                        droppedCueId,
+                        cue.id
+                    );
+                }
+            );
+
+
+            cueContainer.appendChild(
+                cueElement
+            );
+        }
+    );
+
+
+    updateShowMode();
+}
+
+
+/* ============================================================
+   NEW PROJECT
+   ============================================================ */
+
+newProjectButton.addEventListener(
+    "click",
+    () => {
+
+        if (
+            !projectHasChanges
+        ) {
+
+            resetProject();
+
+
+            return;
+        }
+
+
+        pendingAction =
+            "new";
+
+
+        unsavedModal.classList.remove(
+            "hidden"
+        );
+
+
+        modalCancelButton.focus();
+    }
+);
+
+
+/* ============================================================
+   OPEN PROJECT
+   ============================================================ */
+
+openProjectButton.addEventListener(
+    "click",
+    () => {
+
+        if (
+            projectHasChanges
+        ) {
+
+            pendingAction =
+                "open";
+
+
+            unsavedModal.classList.remove(
+                "hidden"
+            );
+
+
+            modalCancelButton.focus();
+
+
+            return;
+        }
+
+
+        projectInput.click();
+    }
+);
+
+
+/* ============================================================
+   UNSAVED MODAL
+   ============================================================ */
+
+modalCancelButton.addEventListener(
+    "click",
+    () => {
+
+        pendingAction =
+            null;
+
+
+        unsavedModal.classList.add(
+            "hidden"
+        );
+
+
+        setStatus(
+            "Action cancelled."
+        );
+    }
+);
+
+
+modalIgnoreButton.addEventListener(
+    "click",
+    () => {
+
+        const action =
+            pendingAction;
+
+
+        pendingAction =
+            null;
+
+
+        unsavedModal.classList.add(
+            "hidden"
+        );
+
+
+        if (
+            action ===
+            "new"
+        ) {
+
+            resetProject();
+
+
+            return;
+        }
+
+
+        if (
+            action ===
+            "open"
+        ) {
+
+            projectInput.click();
+        }
+    }
+);
+
+
+modalSaveButton.addEventListener(
+    "click",
+    async () => {
+
+        const action =
+            pendingAction;
+
+
+        const saved =
+            await saveProject();
+
+
+        if (
+            !saved
+        ) {
+
+            return;
+        }
+
+
+        pendingAction =
+            null;
+
+
+        unsavedModal.classList.add(
+            "hidden"
+        );
+
+
+        if (
+            action ===
+            "new"
+        ) {
+
+            resetProject();
+
+
+            return;
+        }
+
+
+        if (
+            action ===
+            "open"
+        ) {
+
+            projectInput.click();
+        }
+    }
+);
+
+
+/* ============================================================
+   RESET PROJECT
+   ============================================================ */
+
+function resetProject() {
+
+    stopCurrentAudio();
+
+
+    cues.forEach(
+        cue => {
+
+            try {
+
+                URL.revokeObjectURL(
+                    cue.objectUrl
+                );
+
+            } catch (error) {
+
+                console.warn(
+                    error
+                );
+            }
+        }
+    );
+
+
+    cues = [];
+
+
+    nextCueId =
+        1;
+
+
+    selectedCueId =
+        null;
+
+
+    undoHistory =
+        [];
+
+
+    projectNameInput.value =
+        "My Show";
+
+
+    projectHasChanges =
+        false;
+
+
+    /*
+        Auto Advance is a show setting,
+        not a project cue property.
+    */
+
+    autoAdvance =
+        false;
+
+
+    autoAdvanceCheckbox.checked =
+        false;
+
+
+    updateSaveStatus();
+
+
+    updateUndoButton();
+
+
+    renderCues();
+
+
+    updateShowMode();
+
+
+    setStatus(
+        "New project created."
+    );
+}
+
+
+/* ============================================================
+   LOAD PROJECT
+   ============================================================ */
+
+projectInput.addEventListener(
+    "change",
+    async event => {
+
+        const file =
+            event.target.files[0];
+
+
+        if (
+            !file
+        ) {
+
+            return;
+        }
+
+
+        await loadProject(
+            file
+        );
+
+
+        projectInput.value =
+            "";
+    }
+);
+
+
+async function loadProject(
+    projectFile
+) {
+
+    try {
+
+        setStatus(
+            "Opening project..."
+        );
+
+
+        const zip =
+            await JSZip.loadAsync(
+                projectFile
+            );
+
+
+        const configFile =
+            zip.file(
+                "config.txt"
+            );
+
+
+        if (
+            !configFile
+        ) {
+
+            throw new Error(
+                "config.txt was not found in this ZIP."
+            );
+        }
+
+
+        const configText =
+            await configFile.async(
+                "text"
+            );
+
+
+        const parsed =
+            parseConfig(
+                configText
+            );
+
+
+        stopCurrentAudio();
+
+
+        cues.forEach(
+            cue => {
+
+                try {
+
+                    URL.revokeObjectURL(
+                        cue.objectUrl
+                    );
+
+                } catch (error) {
+
+                    console.warn(
+                        error
+                    );
+                }
+            }
+        );
+
+
+        cues = [];
+
+
+        nextCueId =
+            1;
+
+
+        selectedCueId =
+            null;
+
+
+        projectNameInput.value =
+            parsed.projectName ||
+            "My Show";
+
+
+        for (
+            const savedCue of
+            parsed.cues
+        ) {
+
+            const zipEntry =
+                zip.file(
+                    savedCue.file
+                );
+
+
+            if (
+                !zipEntry
+            ) {
+
+                console.warn(
+                    `Missing audio file: ${savedCue.file}`
+                );
+
+
+                continue;
+            }
+
+
+            const blob =
+                await zipEntry.async(
+                    "blob"
+                );
+
+
+            const mimeType =
+                getMimeType(
+                    savedCue.file
+                );
+
+
+            const audioBlob =
+                new Blob(
+                    [blob],
+                    {
+                        type:
+                            mimeType
+                    }
+                );
+
+
+            const file =
+                new File(
+                    [audioBlob],
+                    savedCue.originalFile ||
+                        savedCue.file,
+                    {
+                        type:
+                            mimeType
+                    }
+                );
+
+
+            const objectUrl =
+                URL.createObjectURL(
+                    file
+                );
+
+
+            const cue = {
+
+                id:
+                    nextCueId++,
+
+                name:
+                    savedCue.name ||
+                    `Cue ${savedCue.number}`,
+
+                file:
+                    file,
+
+                fileName:
+                    savedCue.originalFile ||
+                    savedCue.file,
+
+                duration:
+                    null,
+
+                objectUrl:
+                    objectUrl,
+
+                color:
+                    savedCue.color ||
+                    "none"
+            };
+
+
+            cues.push(
+                cue
+            );
+
+
+            determineDuration(
+                cue
+            );
+        }
+
+
+        if (
+            cues.length >
+            0
+        ) {
+
+            selectedCueId =
+                cues[0].id;
+        }
+
+
+        undoHistory =
+            [];
+
+
+        projectHasChanges =
+            false;
+
+
+        updateSaveStatus();
+
+
+        updateUndoButton();
+
+
+        renderCues();
+
+
+        updateShowMode();
+
+
+        setStatus(
+            `Opened project: ${parsed.projectName || projectFile.name}`
+        );
+
+
+        scrollCueIntoView(
+            selectedCueId
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        setStatus(
+            "Unable to open project."
+        );
+
+
+        alert(
+            "Unable to open this project.\n\n" +
+            error.message
+        );
+    }
+}
+
+
+/* ============================================================
+   PARSE CONFIG
+   ============================================================ */
+
+function parseConfig(
+    configText
+) {
+
+    const lines =
+        configText.split(
+            /\r?\n/
+        );
+
+
+    let projectName =
+        "My Show";
+
+
+    const savedCues =
+        [];
+
+
+    let currentCue =
+        null;
+
+
+    for (
+        const rawLine of
+        lines
+    ) {
+
+        const line =
+            rawLine.trim();
+
+
+        if (
+            !line ||
+            line.startsWith("#")
+        ) {
+
+            continue;
+        }
+
+
+        if (
+            line ===
+            "[CUE]"
+        ) {
+
+            if (
+                currentCue
+            ) {
+
+                savedCues.push(
+                    currentCue
+                );
+            }
+
+
+            currentCue =
+                {};
+
+
+            continue;
+        }
+
+
+        const separator =
+            line.indexOf(
+                "="
+            );
+
+
+        if (
+            separator ===
+            -1
+        ) {
+
+            continue;
+        }
+
+
+        const key =
+            line
+                .substring(
+                    0,
+                    separator
+                )
+                .trim();
+
+
+        const value =
+            line
+                .substring(
+                    separator + 1
+                )
+                .trim();
+
+
+        const decodedValue =
+            unescapeConfigValue(
+                value
+            );
+
+
+        if (
+            !currentCue &&
+            key ===
+            "PROJECT"
+        ) {
+
+            projectName =
+                decodedValue;
+
+
+            continue;
+        }
+
+
+        if (
+            currentCue
+        ) {
+
+            switch (
+                key
+            ) {
+
+                case "NUMBER":
+
+                    currentCue.number =
+                        Number(
+                            decodedValue
+                        );
+
+                    break;
+
+
+                case "NAME":
+
+                    currentCue.name =
+                        decodedValue;
+
+                    break;
+
+
+                case "FILE":
+
+                    currentCue.file =
+                        decodedValue;
+
+                    break;
+
+
+                case "ORIGINAL_FILE":
+
+                    currentCue.originalFile =
+                        decodedValue;
+
+                    break;
+
+
+                case "COLOR":
+
+                    currentCue.color =
+                        decodedValue;
+
+                    break;
+            }
+        }
+    }
+
+
+    if (
+        currentCue
+    ) {
+
+        savedCues.push(
+            currentCue
+        );
+    }
+
+
+    savedCues.sort(
+        (a, b) =>
+            (a.number || 0) -
+            (b.number || 0)
+    );
+
+
+    return {
+
+        projectName:
+            projectName,
+
+        cues:
+            savedCues
+    };
+}
+
+
+/* ============================================================
+   SAVE PROJECT
+   ============================================================ */
+
+saveButton.addEventListener(
+    "click",
+    async () => {
+
+        await saveProject();
+    }
+);
+
+
+async function saveProject() {
+
+    if (
+        cues.length ===
+        0
+    ) {
+
+        alert(
+            "There are no cues to save."
+        );
+
+
+        return false;
+    }
+
+
+    try {
+
+        setStatus(
+            "Creating project ZIP..."
+        );
+
+
+        const zip =
+            new JSZip();
+
+
+        let projectName =
+            projectNameInput.value.trim();
+
+
+        if (
+            !projectName
+        ) {
+
+            projectName =
+                "My Show";
+        }
+
+
+        let config =
+            "";
+
+
+        config +=
+            "# Web Cue Maker Project\n";
+
+
+        config +=
+            "# Version 1.0\n";
+
+
+        config +=
+            "# Created entirely in the browser\n";
+
+
+        config +=
+            "\n";
+
+
+        config +=
+            `PROJECT=${escapeConfigValue(projectName)}\n`;
+
+
+        config +=
+            `CUES=${cues.length}\n`;
+
+
+        config +=
+            "\n";
+
+
+        for (
+            let i = 0;
+            i < cues.length;
+            i++
+        ) {
+
+            const cue =
+                cues[i];
+
+
+            const cueNumber =
+                String(
+                    i + 1
+                ).padStart(
+                    3,
+                    "0"
+                );
+
+
+            const extension =
+                getFileExtension(
+                    cue.fileName
+                );
+
+
+            const safeName =
+                sanitizeFileName(
+                    cue.name ||
+                    `Cue ${i + 1}`
+                );
+
+
+            const outputFileName =
+                `${cueNumber}_${safeName}.${extension}`;
+
+
+            config +=
+                "[CUE]\n";
+
+
+            config +=
+                `NUMBER=${i + 1}\n`;
+
+
+            config +=
+                `NAME=${escapeConfigValue(cue.name)}\n`;
+
+
+            config +=
+                `FILE=${outputFileName}\n`;
+
+
+            config +=
+                `ORIGINAL_FILE=${escapeConfigValue(cue.fileName)}\n`;
+
+
+            config +=
+                `COLOR=${cue.color || "none"}\n`;
+
+
+            config +=
+                "\n";
+
+
+            zip.file(
+                outputFileName,
+                cue.file
+            );
+        }
+
+
+        zip.file(
+            "config.txt",
+            config
+        );
+
+
+        const blob =
+            await zip.generateAsync(
+                {
+                    type:
+                        "blob"
+                }
+            );
+
+
+        const downloadUrl =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const downloadLink =
+            document.createElement(
+                "a"
+            );
+
+
+        downloadLink.href =
+            downloadUrl;
+
+
+        downloadLink.download =
+            `${sanitizeFileName(projectName)}.zip`;
+
+
+        document.body.appendChild(
+            downloadLink
+        );
+
+
+        downloadLink.click();
+
+
+        downloadLink.remove();
+
+
+        setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    downloadUrl
+                );
+
+            },
+            1000
+        );
+
+
+        projectHasChanges =
+            false;
+
+
+        updateSaveStatus();
+
+
+        setStatus(
+            `Project saved as ${sanitizeFileName(projectName)}.zip`
+        );
+
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        setStatus(
+            "Error creating project ZIP."
+        );
+
+
+        alert(
+            "There was an error creating the project ZIP.\n\n" +
+            error.message
+        );
+
+
+        return false;
+    }
+}
+
+
+/* ============================================================
+   PROJECT NAME
+   ============================================================ */
+
+let projectNameOriginal =
+    projectNameInput.value;
+
+
+projectNameInput.addEventListener(
+    "focus",
+    () => {
+
+        projectNameOriginal =
+            projectNameInput.value;
+
+
+        saveUndoState();
+    }
+);
+
+
+projectNameInput.addEventListener(
+    "input",
+    () => {
+
+        markChanged();
+    }
+);
+
+
+projectNameInput.addEventListener(
+    "blur",
+    () => {
+
+        if (
+            projectNameOriginal ===
+            projectNameInput.value
+        ) {
+
+            if (
+                undoHistory.length >
+                0
+            ) {
+
+                undoHistory.pop();
+
+                updateUndoButton();
+            }
+
+        } else {
+
+            setStatus(
+                "Project name changed."
+            );
+        }
+    }
+);
+
+
+/* ============================================================
+   KEYBOARD
+   ============================================================ */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        /*
+            Ctrl + Z
+        */
+
+        if (
+            event.ctrlKey &&
+            !event.shiftKey &&
+            event.key.toLowerCase() ===
+                "z"
+        ) {
+
+            event.preventDefault();
+
+
+            if (
+                !hintsModal.classList.contains(
+                    "hidden"
+                ) ||
+                !unsavedModal.classList.contains(
+                    "hidden"
+                )
+            ) {
+
+                return;
+            }
+
+
+            performUndo();
+
+
+            return;
+        }
+
+
+        /*
+            Hints Escape.
+        */
+
+        if (
+            event.key ===
+            "Escape" &&
+            !hintsModal.classList.contains(
+                "hidden"
+            )
+        ) {
+
+            event.preventDefault();
+
+
+            closeHints();
+
+
+            return;
+        }
+
+
+        /*
+            If user is typing, don't trigger
+            cue controls.
+        */
+
+        const tag =
+            event.target.tagName;
+
+
+        const isTyping =
+            tag === "INPUT" ||
+            tag === "TEXTAREA" ||
+            tag === "SELECT";
+
+
+        if (
+            isTyping
+        ) {
+
+            return;
+        }
+
+
+        /*
+            Warning dialog.
+        */
+
+        if (
+            !unsavedModal.classList.contains(
+                "hidden"
+            )
+        ) {
+
+            return;
+        }
+
+
+        /*
+            Previous.
+        */
+
+        if (
+            event.key ===
+            "ArrowUp"
+        ) {
+
+            event.preventDefault();
+
+            selectPreviousCue();
+
+            return;
+        }
+
+
+        /*
+            Next.
+        */
+
+        if (
+            event.key ===
+            "ArrowDown"
+        ) {
+
+            event.preventDefault();
+
+            selectNextCue();
+
+            return;
+        }
+
+
+        /*
+            GO.
+        */
+
+        if (
+            event.code ===
+            "Space"
+        ) {
+
+            event.preventDefault();
+
+            triggerSelectedCue();
+
+            return;
+        }
+
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            event.preventDefault();
+
+            triggerSelectedCue();
+
+            return;
+        }
+
+
+        /*
+            STOP.
+        */
+
+        if (
+            event.key ===
+            "Escape"
+        ) {
+
+            event.preventDefault();
+
+
+            stopCurrentAudio();
+
+
+            renderCues();
+
+
+            updateShowMode();
+
+
+            setStatus(
+                "Playback stopped."
+            );
+
+
+            return;
+        }
+
+
+        /*
+            DELETE.
+        */
+
+        if (
+            event.key ===
+            "Delete"
+        ) {
+
+            event.preventDefault();
+
+
+            if (
+                selectedCueId !==
+                null
+            ) {
+
+                deleteCue(
+                    selectedCueId
+                );
+            }
+        }
+
+    }
+);
+
+
+/* ============================================================
+   LEAVE PAGE WARNING
+   ============================================================ */
+
+window.addEventListener(
+    "beforeunload",
+    event => {
+
+        if (
+            !projectHasChanges
+        ) {
+
+            return;
+        }
+
+
+        event.preventDefault();
+
+
+        event.returnValue =
+            "";
+    }
+);
+
+
+/* ============================================================
+   FILE HELPERS
+   ============================================================ */
+
+function getFileExtension(
+    fileName
+) {
+
+    const match =
+        fileName.match(
+            /\.([^.]+)$/
+        );
+
+
+    if (
+        !match
+    ) {
+
+        return "wav";
+    }
+
+
+    return match[1].toLowerCase();
+}
+
+
+function getMimeType(
+    fileName
+) {
+
+    const extension =
+        getFileExtension(
+            fileName
+        );
+
+
+    switch (
+        extension
+    ) {
+
+        case "mp3":
+
+            return "audio/mpeg";
+
+
+        case "wav":
+
+            return "audio/wav";
+
+
+        default:
+
+            return "application/octet-stream";
+    }
+}
+
+
+function sanitizeFileName(
+    name
+) {
+
+    return String(
+        name
+    )
+        .trim()
+        .replace(
+            /[<>:"/\\|?*]/g,
+            "_"
+        )
+        .replace(
+            /\s+/g,
+            "_"
+        )
+        .replace(
+            /_+/g,
+            "_"
+        )
+        .replace(
+            /^[_\.]+|[_\.]+$/g,
+            ""
+        )
+        .substring(
+            0,
+            120
+        )
+        ||
+        "Cue";
+}
+
+
+function escapeConfigValue(
+    value
+) {
+
+    return String(
+        value
+    )
+        .replace(
+            /\\/g,
+            "\\\\"
+        )
+        .replace(
+            /\r?\n/g,
+            " "
+        )
+        .replace(
+            /=/g,
+            "\\="
+        );
+}
+
+
+function unescapeConfigValue(
+    value
+) {
+
+    return String(
+        value
+    )
+        .replace(
+            /\\=/g,
+            "="
+        )
+        .replace(
+            /\\\\/g,
+            "\\"
+        );
+}
+
+
+function formatDuration(
+    seconds
+) {
+
+    if (
+        typeof seconds !==
+            "number" ||
+        !Number.isFinite(
+            seconds
+        )
+    ) {
+
+        return "--:--";
+    }
+
+
+    const totalSeconds =
+        Math.floor(
+            seconds
+        );
+
+
+    const minutes =
+        Math.floor(
+            totalSeconds / 60
+        );
+
+
+    const remainingSeconds =
+        totalSeconds % 60;
+
+
+    return (
+        String(
+            minutes
+        ).padStart(
+            2,
+            "0"
+        )
+        +
+        ":"
+        +
+        String(
+            remainingSeconds
+        ).padStart(
+            2,
+            "0"
+        )
+    );
+}
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+function setStatus(
+    message
+) {
+
+    statusElement.textContent =
+        message;
+}
+
+
+/* ============================================================
+   SCROLL CUE
+   ============================================================ */
+
+function scrollCueIntoView(
+    cueId
+) {
+
+    if (
+        cueId ===
+        null
+    ) {
+
+        return;
+    }
+
+
+    const cueElement =
+        document.querySelector(
+            `.cue[data-id="${cueId}"]`
+        );
+
+
+    if (
+        cueElement
+    ) {
+
+        cueElement.scrollIntoView(
+            {
+                block:
+                    "nearest",
+
+                behavior:
+                    "smooth"
+            }
+        );
+    }
+}
+
+
+/* ============================================================
+   INITIALIZE
+   ============================================================ */
+
+updateSaveStatus();
+
+updateUndoButton();
+
+renderCues();
+
+updateShowMode();
+
+initializeStartup();
+
+</script>
+
+</body>
+
+</html>
