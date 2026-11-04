@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doomsday Clock Studio</title>
+<title>Doomsday Countdown Studio</title>
 <style>
 :root {
   --site-primary: #e64b3c;
@@ -544,7 +544,7 @@ input[type="file"] { width: 100%; color: var(--text-muted); font-size: 11px; }
     link.click();
     link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1500);
-    setStatus("SYS: Your Upload is confirmed as "Doomsday-clock.html" ");
+    setStatus('SYS: Your export "doomsday-clock.html" is ready.');
   }
 
   async function copyExport() {
@@ -602,7 +602,7 @@ input[type="file"] { width: 100%; color: var(--text-muted); font-size: 11px; }
   controls.forEach((id) => $(id).addEventListener("input", renderPreview));
   $("modePrecision").addEventListener("click", () => setMode("precision"));
   $("modeCalendar").addEventListener("click", () => setMode("calendar"));
-  $("focusToggle").addEventListener("click", () => setFocusMode(!$ ("app-root").classList.contains("focus-mode")));
+  $("focusToggle").addEventListener("click", () => setFocusMode(!$("app-root").classList.contains("focus-mode")));
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && $("app-root").classList.contains("focus-mode")) setFocusMode(false);
   });
