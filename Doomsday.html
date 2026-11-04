@@ -61,7 +61,7 @@ body {
 .site-header p { margin: 8px 0 0; max-width: 650px; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
 .header-tag {
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: #00ff00;
   color: var(--text-muted);
   border-radius: calc(999px * var(--site-radius-scale));
   padding: 8px 12px;
@@ -147,7 +147,7 @@ input[type="file"] { width: 100%; color: var(--text-muted); font-size: 11px; }
 .preview-stage::after { width: 390px; height: 390px; }
 .clock-card {
   position: relative; z-index: 1; width: min(100%, 920px); padding: clamp(25px, 5vw, 52px) 20px;
-  border: 2px solid var(--clock-accent, #ff4438); border-radius: 20px;
+  border: 2px solid var(--clock-accent, #ff4438); border-radius: 3px;
   background: rgba(0,0,0,.76); color: #fff; text-align: center;
   box-shadow: 0 0 54px color-mix(in srgb, var(--clock-accent, #ff4438) 35%, transparent);
 }
@@ -217,21 +217,21 @@ input[type="file"] { width: 100%; color: var(--text-muted); font-size: 11px; }
 <div id="app-root">
   <header class="site-header">
     <div>
-      <div class="eyebrow">SCE · Clock Workshop</div>
+      <div class="eyebrow">SCE · Project Armageddon</div>
       <h1>Doomsday Clock Studio</h1>
-      <p>Build your countdown, watch every change live, and export a self-contained clock when it is ready.</p>
+      <p>Study motivation at it's finest</p>
     </div>
-    <div class="header-tag">LIVE WEBSITE PREVIEW · HTML EXPORT</div>
+    <div class="header-tag">Standby for launch</div>
   </header>
 
   <main class="studio">
     <section class="panel" aria-label="Clock settings">
-      <h2 class="panel-heading">Clock settings</h2>
-      <p class="panel-intro">Changes appear in the preview as you edit. The explosion remains hidden until the deadline.</p>
+      <h2 class="panel-heading">Master Control Panel</h2>
+      <p class="panel-intro">Use the control panel to customize the countdown</p>
 
       <div class="group">
-        <label class="label" for="clockName">Clock name</label>
-        <input id="clockName" type="text" value="Doomsday Clock" maxlength="90">
+        <label class="label" for="clockName">Countdown Name</label>
+        <input id="clockName" type="text" value="Doomsday" maxlength="90">
         <div class="datetime-grid">
           <div>
             <label class="label" for="endDate">End date</label>
@@ -292,14 +292,14 @@ input[type="file"] { width: 100%; color: var(--text-muted); font-size: 11px; }
         <button id="exportButton" class="action-primary" type="button">Export clock HTML</button>
         <button id="copyButton" class="action-quiet full" type="button">Copy exported HTML</button>
       </div>
-      <p id="status" class="status" role="status" aria-live="polite">Ready. Your preview updates automatically.</p>
+      <p id="status" class="status" role="status" aria-live="polite">All systems Secure && Ready - Standing By for initiation</p>
     </section>
 
     <section class="preview-panel" aria-label="Live clock preview">
       <div class="preview-toolbar">
         <strong>Live clock preview</strong>
         <span id="previewModeLabel">PRECISION MODE</span>
-        <button id="focusToggle" class="action-secondary focus-toggle" type="button" aria-pressed="false" aria-label="Hide editor controls and focus on clock">Focus clock</button>
+        <button id="focusToggle" class="action-secondary focus-toggle" type="button" aria-pressed="false" aria-label="Hide editor controls and focus on clock" style="">Initiate Launch Screen</button>
       </div>
       <div id="previewStage" class="preview-stage">
         <article class="clock-card">
@@ -310,7 +310,7 @@ input[type="file"] { width: 100%; color: var(--text-muted); font-size: 11px; }
           <img id="previewExplosion" class="explosion-image" alt="Explosion">
         </article>
       </div>
-      <div class="preview-note">The explosion image is deliberately concealed until the deadline is reached.</div>
+      <div class="preview-note">Powered By Swanson Custom Enterprises International Version: 2 Patch: 1</div>
     </section>
   </main>
 </div>
@@ -544,17 +544,17 @@ input[type="file"] { width: 100%; color: var(--text-muted); font-size: 11px; }
     link.click();
     link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1500);
-    setStatus("Exported doomsday-clock.html with the selected deadline and display mode.");
+    setStatus("SYS: Your Upload is confirmed as "Doomsday-clock.html" ");
   }
 
   async function copyExport() {
     const config = getConfig();
-    if (!Number.isFinite(config.deadline)) { setStatus("Please enter a valid deadline before copying."); return; }
+    if (!Number.isFinite(config.deadline)) { setStatus("ALERT! Please enter a valid deadline before copying."); return; }
     try {
       await navigator.clipboard.writeText(buildExportHtml(config));
-      setStatus("Standalone clock HTML copied to the clipboard.");
+      setStatus("Fatal: Standalone clock HTML copied to the clipboard.");
     } catch (error) {
-      setStatus("Clipboard access is blocked in this browser. Use Export clock HTML instead.");
+      setStatus("Fatal: Clipboard access is blocked in this browser. Use Export clock HTML instead.");
     }
   }
 
@@ -567,9 +567,9 @@ input[type="file"] { width: 100%; color: var(--text-muted); font-size: 11px; }
 
   function setFocusMode(enabled) {
     $("app-root").classList.toggle("focus-mode", enabled);
-    $("focusToggle").textContent = enabled ? "Exit focus" : "Focus clock";
+    $("focusToggle").textContent = enabled ? "Return To Edit Screen" : "Launch Screen";
     $("focusToggle").setAttribute("aria-pressed", String(enabled));
-    $("focusToggle").setAttribute("aria-label", enabled ? "Show editor controls" : "Hide editor controls and focus on clock");
+    $("focusToggle").setAttribute("aria-label", enabled ? "Show Main Controls" : "Hide Main Controls and focus on Countdown");
   }
 
   function setDefaultDeadline() {
@@ -621,10 +621,10 @@ input[type="file"] { width: 100%; color: var(--text-muted); font-size: 11px; }
     $("imageFile").value = "";
     $("imageThumb").removeAttribute("src");
     $("imageThumb").style.display = "none";
-    $("imageHelp").textContent = "Upload a PNG, JPG, WebP, or GIF up to 8 MB. The image is embedded in your exported clock.";
+    $("imageHelp").textContent = "Upload a PNG, JPG, WebP, or GIF up to 8 MB. The image is embedded in your countdown.";
     state.imageData = "";
     setMode("precision");
-    setStatus("Settings reset. The preview shows the default clock.");
+    setStatus("Settings reset. The preview shows the default countdown.");
   });
 
   setDefaultDeadline();
